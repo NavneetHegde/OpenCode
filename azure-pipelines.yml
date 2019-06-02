@@ -11,11 +11,5 @@ steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
-- task: VSTest@2
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: '**\OpenCode.Tests\bin\$(BuildConfiguration)\**\*test*.dll
-      !**\xunit.runner.visualstudio.testadapter.dll
-      !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll'
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+
 
