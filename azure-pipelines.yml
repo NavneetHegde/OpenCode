@@ -1,35 +1,5 @@
 # Starter pipeline
 
-  inputs:
-    testSelector: 'testPlan'
-    testPlan: '8'
-    testSuite: '{
-
-        "id": 9,
-
-        "name": "Visual Studio Test",
-
-        "plan": {
-
-          "id": "8",
-
-          "name": "8"
-
-        },
-
-        "testCaseCount": 0,
-
-        "inheritDefaultConfigurations": false,
-
-        "lastUpdatedDate": "0001-01-01T00:00:00",
-
-        "text": "Visual Studio Test"
-
-      }'
-    testConfiguration: '1'
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-
-
 trigger:
 - master
 
@@ -40,14 +10,4 @@ steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
-- task: VSTest@2
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: '**\bin\$(BuildConfiguration)\**\*test*.dll
-      !**\obj\**
-      !**\xunit.runner.visualstudio.testadapter.dll
-      !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll'
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+
