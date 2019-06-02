@@ -1,4 +1,33 @@
 # Starter pipeline
+- task: VSTest@2
+  inputs:
+    testSelector: 'testPlan'
+    testPlan: '8'
+    testSuite: '{
+
+        "id": 9,
+
+        "name": "Visual Studio Test",
+
+        "plan": {
+
+          "id": "8",
+
+          "name": "8"
+
+        },
+
+        "testCaseCount": 0,
+
+        "inheritDefaultConfigurations": false,
+
+        "lastUpdatedDate": "0001-01-01T00:00:00",
+
+        "text": "Visual Studio Test"
+
+      }'
+    testConfiguration: '1'
+    searchFolder: '$(System.DefaultWorkingDirectory)'
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
