@@ -10,8 +10,8 @@ pool:
 steps:
 - task: AzureResourceGroupDeployment@2
   inputs:
-    azureSubscription: 'Windows Azure  MSDN - Visual Studio Premium(2c7f00ce-1c20-464c-85ef-26afbbd7a416)'
+    azureSubscription: 'Visual Studio Premium with MSDN(f0ab3975-e90c-4784-9c8b-93c2fec11966)'
     action: 'Select Resource Group'
-    resourceGroupName: 'Default-Web-WestUS'
+    resourceGroupName: 'BuildLibrary'
 
 
