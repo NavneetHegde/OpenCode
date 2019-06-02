@@ -18,8 +18,7 @@ steps:
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
-    testAssemblyVer2: '**\bin\$(BuildConfiguration)\**\*test*.dll
-      !**\obj\**
+    testAssemblyVer2: '**\OpenCode.Tests\bin\$(BuildConfiguration)\**\*test*.dll
       !**\xunit.runner.visualstudio.testadapter.dll
       !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll'
     searchFolder: '$(System.DefaultWorkingDirectory)'
