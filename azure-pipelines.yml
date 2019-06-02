@@ -12,7 +12,7 @@ steps:
   inputs:
     azureSubscription: 'Visual Studio Premium with MSDN(f0ab3975-e90c-4784-9c8b-93c2fec11966)'
     action: 'Create Or Update Resource Group'
-    resourceGroupName: 
+    resourceGroupName: 'BuildLibrary'
     location: 'East US'
     templateLocation: 'Linked artifact'
     csmFile: 'DeploymentFiles/OpenCode'
