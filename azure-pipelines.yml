@@ -2,6 +2,7 @@
 
 
 
+
 trigger:
 - master
 
@@ -22,5 +23,7 @@ steps:
       !**\xunit.runner.visualstudio.testadapter.dll
       !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll'
     searchFolder: '$(System.DefaultWorkingDirectory)'
-
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
 
