@@ -29,12 +29,12 @@ steps:
 - task: NuGetCommand@2
   inputs:
     command: pack
-    packagesToPack: '**/*.csproj'
+    packagesToPack: '**\*.csproj;-:**\*test.csproj'
     versioningScheme: byPrereleaseNumber
     majorVersion: '$(Major)'
     minorVersion: '$(Minor)'
     patchVersion: '$(Patch)'
-- script: dotnet pack /p:PackageVersion=$(version)  # define version variable elsewhere in your pipeline    
+- script: dotnet pack /p:PackageVersion=$(version)
 - task: NuGetCommand@2
   inputs:
     command: push
