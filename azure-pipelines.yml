@@ -30,17 +30,11 @@ steps:
   inputs:
     command: pack
     packagesToPack: '**/*.csproj;!**/*.Tests/*.csproj'
-    versioningScheme: byPrereleaseNumber
-    majorVersion: '$(Major)'
-    minorVersion: '$(Minor)'
-    patchVersion: '$(Patch)'
+    arguments: '--configuration Release'
 - script: dotnet pack /p:PackageVersion=$(version)
 - task: NuGetCommand@2
   inputs:
     command: push
     nuGetFeedType: external
     publishFeedCredentials: 'OpenCode.Nuget'
-    versioningScheme: byPrereleaseNumber
-    majorVersion: '$(Major)'
-    minorVersion: '$(Minor)'
-    patchVersion: '$(Patch)' 
+    arguments: '--configuration Release'
