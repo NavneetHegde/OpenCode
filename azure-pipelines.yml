@@ -29,7 +29,7 @@ steps:
 - task: NuGetCommand@2
   inputs:
     command: pack
-    packagesToPack: '**\*.csproj;-:**\*test.csproj'
+    packagesToPack: '**/*.csproj;!**/*.Tests/*.csproj'
     versioningScheme: byPrereleaseNumber
     majorVersion: '$(Major)'
     minorVersion: '$(Minor)'
