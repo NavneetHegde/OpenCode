@@ -28,10 +28,10 @@ steps:
     arguments: '--configuration Release --collect "Code coverage"'
 - task: NuGetCommand@2
   inputs:
-    command: pack
+    command: pack 
     packagesToPack: '**/*.csproj;!**/*.Tests/*.csproj'
     arguments: '--configuration Release'
-- script: dotnet pack /p:PackageVersion=$(version)
+- script: dotnet pack --configuration Release /p:PackageVersion=$(version)
 - task: NuGetCommand@2
   inputs:
     command: push
