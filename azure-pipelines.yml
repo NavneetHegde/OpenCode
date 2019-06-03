@@ -6,7 +6,7 @@ variables:
   Major: '1'
   Minor: '0'
   Patch: '0'
-  version: '0'
+  version: '1.0.0'
 
 trigger:
 - master
