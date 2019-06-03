@@ -37,6 +37,8 @@ steps:
   inputs:
     command: push
     nuGetFeedType: external
-    publishFeedCredentials: '<Name of the NuGet service connection>'
-    versioningScheme: byEnvVar
-    versionEnvVar: <VersionVariableName>    
+    publishFeedCredentials: 'OpenCode.Nuget'
+    versioningScheme: byPrereleaseNumber
+    majorVersion: '$(Major)'
+    minorVersion: '$(Minor)'
+    patchVersion: '$(Patch)' 
