@@ -11,24 +11,19 @@ pool:
   vmImage: 'windows-2019'
 
 steps:
-- task: AzureResourceGroupDeployment@2
+- task: DotNetCoreCLI@2
+  displayName: Build
   inputs:
-    azureSubscription: 'Visual Studio Premium with MSDN(f0ab3975-e90c-4784-9c8b-93c2fec11966)'
-    action: 'Select Resource Group'
-    resourceGroupName: 'BuildLibrary'
-    outputVariable: 'DeployOpneCode'
-- task: VSTest@2
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: '**\OpenCode.Tests\bin\$(BuildConfiguration)\**\*test*.dll
-      !**\xunit.runner.visualstudio.testadapter.dll
-      !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll'
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+    command: build
+    projects: '**/*.csproj'
+    arguments: '--configuration Release'
 - task: DotNetCoreCLI@2
   inputs:
-    command: 'build'
-- task: VSBuild@1
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+- task: PublishTestResults@2
   inputs:
-    solution: '**\*.sln'
-    vsVersion: '15.0'
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
 
