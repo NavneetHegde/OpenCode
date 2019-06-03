@@ -1,10 +1,12 @@
 # Starter pipeline
 
 
+
 variables:
   Major: '1'
   Minor: '0'
   Patch: '0'
+  version: '0'
 
 trigger:
 - master
@@ -23,7 +25,7 @@ steps:
   inputs:
     command: test
     projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    arguments: '--configuration Release --collect "Code coverage"'
 - task: NuGetCommand@2
   inputs:
     command: pack
@@ -32,6 +34,7 @@ steps:
     majorVersion: '$(Major)'
     minorVersion: '$(Minor)'
     patchVersion: '$(Patch)'
+- script: dotnet pack /p:PackageVersion=$(version)  # define version variable elsewhere in your pipeline    
 - task: NuGetCommand@2
   inputs:
     command: push
