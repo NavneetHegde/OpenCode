@@ -29,6 +29,7 @@ steps:
 - task: NuGetCommand@2
   inputs:
     command: pack
+    configuration: Release
     versioningScheme: byPrereleaseNumber
     packagesToPack: '**/*.csproj;!**/*Tests/*.csproj'
     majorVersion: '$(Major)'
