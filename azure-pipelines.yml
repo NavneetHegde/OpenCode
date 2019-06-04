@@ -1,6 +1,7 @@
 # Starter pipeline
 
 
+
 variables:
   Major: '1'
   Minor: '0'
@@ -44,3 +45,7 @@ steps:
     nuGetFeedType: external
     publishFeedCredentials: 'OpenCode.Nuget'
     arguments: '--configuration Release'
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: cobertura
+    summaryFileLocation: $(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml
