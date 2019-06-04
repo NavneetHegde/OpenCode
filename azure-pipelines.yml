@@ -30,6 +30,7 @@ steps:
   inputs:
     command: pack
     versioningScheme: byPrereleaseNumber
+    packagesToPack: '**/*.csproj-!**/*Tests/*.csproj'
     majorVersion: '$(Major)'
     minorVersion: '$(Minor)'
     patchVersion: '$(Patch)'
