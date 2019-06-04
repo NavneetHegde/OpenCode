@@ -26,16 +26,13 @@ steps:
     command: test
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration Release --collect "Code coverage"'
-- script: dotnet pack --configuration Release /p:PackageVersion=$(version)
 - task: NuGetCommand@2
   inputs:
-    command: push
-    nuGetFeedType: external
-    publishFeedCredentials: 'OpenCode.Nuget'
+    command: pack
     versioningScheme: byPrereleaseNumber
     majorVersion: '$(Major)'
     minorVersion: '$(Minor)'
-    patchVersion: '$(Patch)' 
+    patchVersion: '$(Patch)'
 - task: NuGetCommand@2
   inputs:
     command: push
