@@ -2,7 +2,11 @@
 
 
 
-
+variables:
+  Major: '1'
+  Minor: '0'
+  Patch: '0'
+  version: '1.0.0'
 
 trigger:
 - master
@@ -11,24 +15,37 @@ pool:
   vmImage: 'windows-2019'
 
 steps:
-- task: AzureResourceGroupDeployment@2
+- task: DotNetCoreCLI@2
+  displayName: Build
   inputs:
-    azureSubscription: 'Visual Studio Premium with MSDN(f0ab3975-e90c-4784-9c8b-93c2fec11966)'
-    action: 'Select Resource Group'
-    resourceGroupName: 'BuildLibrary'
-    outputVariable: 'DeployOpneCode'
-- task: VSTest@2
-  inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: '**\OpenCode.Tests\bin\$(BuildConfiguration)\**\*test*.dll
-      !**\xunit.runner.visualstudio.testadapter.dll
-      !**\xunit.runner.visualstudio.dotnetcore.testadapter.dll'
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+    command: build
+    projects: '**/*.csproj'
+    arguments: '--configuration Release'
 - task: DotNetCoreCLI@2
   inputs:
-    command: 'build'
-- task: VSBuild@1
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration Release --collect "Code coverage"'
+#- task: NuGetToolInstaller@1
+#  inputs:
+#    versionSpec: '4.9.1'
+#    checkLatest: true
+#- task: NuGetCommand@2
+#  inputs:
+#    command: pack
+#    configuration: 'Release'
+#    versioningScheme: byPrereleaseNumber
+#    packagesToPack: '**/*.csproj;!**/*Tests/*.csproj'
+#    majorVersion: '$(Major)'
+#    minorVersion: '$(Minor)'
+#    patchVersion: '$(Patch)'
+#- task: NuGetCommand@2
+#  inputs:
+#    command: push
+#    nuGetFeedType: external
+#    publishFeedCredentials: 'OpenCode.Nuget'
+#    arguments: '--configuration Release'
+- task: PublishCodeCoverageResults@1
   inputs:
-    solution: '**\*.sln'
-    vsVersion: '15.0'
-
+    codeCoverageTool: cobertura
+    summaryFileLocation: $(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml
