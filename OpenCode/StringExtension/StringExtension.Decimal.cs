@@ -1,5 +1,5 @@
 ﻿
-namespace OpenCode.StringExtension
+namespace OpenCode
 {
     public static partial class StringExtension
     {

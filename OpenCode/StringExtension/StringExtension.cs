@@ -1,5 +1,5 @@
 ﻿
-namespace OpenCode.StringExtension
+namespace OpenCode
 {
     /// <summary>
     /// Specialized or generic extension for string type

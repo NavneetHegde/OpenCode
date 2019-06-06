@@ -1,7 +1,6 @@
 ﻿using Xunit;
-using OpenCode.StringExtension;
 
-namespace OpenCode.Tests.StringExtension
+namespace OpenCode.Tests
 {
     public partial class StringExtension
     {
