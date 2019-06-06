@@ -7,12 +7,12 @@ namespace OpenCode.StringExtension
         /// Returns parsed value or default value if parsing failed
         /// </summary>
         /// <param name="input">string to parse</param>
-        /// <param name="defaultValue">default value if not passed then default(decimal)</param>
-        /// <returns>Parsevalue or default value</returns>
-        public static decimal ParseToDecimal(this string input, decimal defaultValue = default(decimal))
+        /// <param name="defaultValue">default value if not passed then default(int)</param>
+        /// <returns>Parse value or default value</returns>
+        public static int ParseToInt(this string input, int defaultValue = default(int))
         {
-            decimal output;
-            if (decimal.TryParse(input, out output))
+            int output;
+            if (int.TryParse(input, out output))
                 return output;
             else
                 return defaultValue;

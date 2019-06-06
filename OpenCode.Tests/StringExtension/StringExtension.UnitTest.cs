@@ -1,15 +1,17 @@
-using Xunit;
+﻿using Xunit;
 using OpenCode.StringExtension;
 
-namespace OpenCode.Tests
+namespace OpenCode.Tests.StringExtension
 {
-    public class RemoveTrailingZeroUnitTest
+    public partial class StringExtension
     {
+
+        #region RemoveTrailingZero
         [Theory]
         [InlineData("2")]
         [InlineData("2.000")]
         [InlineData("02")]
-        public void ShouldReturn2(string input)
+        public void RemoveTrailingZero_ShouldReturn2(string input)
         {
             var result = input.RemoveTrailingZero();
 
@@ -20,7 +22,7 @@ namespace OpenCode.Tests
         [InlineData("2.01")]
         [InlineData("2.0100")]
         [InlineData("02.010")]
-        public void ShouldReturn201(string input)
+        public void RemoveTrailingZero_ShouldReturn201(string input)
         {
             var result = input.RemoveTrailingZero();
 
@@ -33,11 +35,12 @@ namespace OpenCode.Tests
         [InlineData("test")]
         [InlineData("02v.0")]
         [InlineData("2")]
-        public void ShouldReturnIuputAsIs(string input)
+        public void RemoveTrailingZero_ShouldReturnIuputAsIs(string input)
         {
             var result = input.RemoveTrailingZero();
 
             Assert.Equal(input, result);
         }
+        #endregion
     }
 }
