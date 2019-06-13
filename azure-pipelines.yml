@@ -49,6 +49,6 @@ steps:
     publishFeedCredentials: 'OpenCode.Nuget'
     arguments: '--configuration Release'
 - task: PublishCodeCoverageResults@1
-inputs:
+  inputs:
     codeCoverageTool: 'JaCoCo'
     summaryFileLocation:  $(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml
