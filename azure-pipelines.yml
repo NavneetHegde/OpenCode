@@ -2,6 +2,7 @@
 
 
 
+
 variables:
   Major: '1'
   Minor: '0'
@@ -48,6 +49,6 @@ steps:
     publishFeedCredentials: 'OpenCode.Nuget'
     arguments: '--configuration Release'
 - task: PublishCodeCoverageResults@1
-  inputs:
-    codeCoverageTool: cobertura
-    summaryFileLocation: $(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml
+inputs:
+    codeCoverageTool: 'JaCoCo'
+    summaryFileLocation:  $(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml
