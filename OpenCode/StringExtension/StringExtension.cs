@@ -1,4 +1,7 @@
 ﻿
+using System;
+using System.Security.Cryptography;
+
 namespace OpenCode
 {
     /// <summary>
@@ -20,6 +23,29 @@ namespace OpenCode
                 return output.ToString("G29");
             else
                 return input;
+        }
+
+        /// <summary>
+        /// Returns SHA256 hash of input string
+        /// </summary>
+        /// <param name="input">input to be hashed</param>
+        /// <param name="hasHashed">True if hash is successful else false</param>
+        /// <returns>Hashed value</returns>
+        public static string SHA256tHash(this string input, out bool hasHashed)
+        {
+            hasHashed = false;
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+            else
+            {
+                using (var hashAlgorithm = new SHA256CryptoServiceProvider())
+                {
+                    var byteValue = System.Text.Encoding.UTF8.GetBytes(input);
+                    var byteHash = hashAlgorithm.ComputeHash(byteValue);
+                    hasHashed = true;
+                    return Convert.ToBase64String(byteHash, Base64FormattingOptions.None);
+                }
+            }
         }
     }
 }

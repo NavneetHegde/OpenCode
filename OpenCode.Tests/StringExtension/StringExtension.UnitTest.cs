@@ -41,5 +41,34 @@ namespace OpenCode.Tests
             Assert.Equal(input, result);
         }
         #endregion
+
+        #region SHA256 Hash
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void SHA256tHash_ShouldReturnHashFailed(string input)
+        {
+            bool hashed;
+            var result = input.SHA256tHash(out hashed);
+
+            Assert.False(hashed);
+            Assert.Equal(string.Empty, result);
+        }
+
+        [Theory]
+        [InlineData("TestMyHash")]
+        public void SHA256tHash_ShouldReturnValidHash(string input)
+        {
+            bool hashed;
+            var result = input.SHA256tHash(out hashed);
+
+            Assert.True(hashed);
+            Assert.Equal("nP45Z0r63tlUmXg4QVoh+GhiFkES1xhdY57UDTX99r8=", result);
+            Assert.Equal(44, result.Length);
+        }
+
+        #endregion
+
     }
 }
