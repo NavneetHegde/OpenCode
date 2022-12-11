@@ -26,6 +26,20 @@ namespace OpenCode
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string TestRemoveTrailingZero(this string input)
+        {
+            decimal output;
+            if (decimal.TryParse(input, out output))
+                return output.ToString("G29");
+            else
+                return input;
+        }
+
+        /// <summary>
         /// Returns SHA256 hash of input string
         /// </summary>
         /// <param name="input">input to be hashed</param>
