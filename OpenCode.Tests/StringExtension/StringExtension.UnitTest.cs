@@ -1,10 +1,12 @@
-﻿using Xunit;
+﻿using System;
+using System.Security.Cryptography;
+using System.Text;
+using Xunit;
 
 namespace OpenCode.Tests
 {
     public partial class StringExtension
     {
-
         #region RemoveTrailingZero
         [Theory]
         [InlineData("2")]
@@ -56,19 +58,46 @@ namespace OpenCode.Tests
             Assert.Equal(string.Empty, result);
         }
 
-        [Theory]
-        [InlineData("TestMyHash")]
-        public void SHA256tHash_ShouldReturnValidHash(string input)
+        [Fact]
+        public void SHA256tHash_ValidInput_ReturnsHashAndSetsHasHashedTrue()
         {
-            bool hashed;
-            var result = input.SHA256tHash(out hashed);
+            // Arrange
+            string input = "test";
+            bool hasHashed;
 
-            Assert.True(hashed);
-            Assert.Equal("nP45Z0r63tlUmXg4QVoh+GhiFkES1xhdY57UDTX99r8=", result);
-            Assert.Equal(44, result.Length);
+            // Act
+            var result = input.SHA256tHash(out hasHashed);
+
+            // Assert
+            Assert.NotEmpty(result);
+            Assert.True(hasHashed);
+
+            // To further validate, we can compute the expected hash:
+            using (var sha256 = SHA256.Create())
+            {
+                var expectedHashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+                var expectedHash = Convert.ToBase64String(expectedHashBytes);
+                Assert.Equal(expectedHash, result);
+            }
+        }
+
+        [Fact]
+        public void SHA256tHash_SameInput_ReturnsSameHash()
+        {
+            // Arrange
+            string input = "consistent";
+            bool hasHashed1, hasHashed2;
+
+            // Act
+            var result1 = input.SHA256tHash(out hasHashed1);
+            var result2 = input.SHA256tHash(out hasHashed2);
+
+            // Assert
+            Assert.Equal(result1, result2);
+            Assert.True(hasHashed1);
+            Assert.True(hasHashed2);
         }
 
         #endregion
-
     }
 }

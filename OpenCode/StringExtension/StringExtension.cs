@@ -1,6 +1,6 @@
-﻿
-using System;
+﻿using System;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace OpenCode
 {
@@ -11,26 +11,12 @@ namespace OpenCode
     {
         /// <summary>
         /// Removes the trailing zeros from the string. if string is not in 
-        /// proper ecimal format then function returns the same string value
+        /// proper decimal format then function returns the same string value
         /// </summary>
         /// <param name="input">string value containig trailing zero</param>
         /// <returns>Compacted string value</returns>
         /// <example>2.0100 -> 2.01, 2.000 -> 2</example>
         public static string RemoveTrailingZero(this string input)
-        {
-            decimal output;
-            if (decimal.TryParse(input, out output))
-                return output.ToString("G29");
-            else
-                return input;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public static string TestRemoveTrailingZero(this string input)
         {
             decimal output;
             if (decimal.TryParse(input, out output))
@@ -49,16 +35,16 @@ namespace OpenCode
         {
             hasHashed = false;
             if (string.IsNullOrWhiteSpace(input))
-                return string.Empty;
-            else
             {
-                using (var hashAlgorithm = new SHA256CryptoServiceProvider())
-                {
-                    var byteValue = System.Text.Encoding.UTF8.GetBytes(input);
-                    var byteHash = hashAlgorithm.ComputeHash(byteValue);
-                    hasHashed = true;
-                    return Convert.ToBase64String(byteHash, Base64FormattingOptions.None);
-                }
+                return string.Empty;
+            }
+
+            using (var sha256 = SHA256.Create())
+            {
+                var byteValue = Encoding.UTF8.GetBytes(input);
+                var byteHash = sha256.ComputeHash(byteValue);
+                hasHashed = true;
+                return Convert.ToBase64String(byteHash);
             }
         }
     }
