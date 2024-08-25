@@ -13,3 +13,10 @@ The Custom C# Extension Methods Library is a collection of thoughtfully designed
 ```csharp
 string input = "Hello";
 string padded = input.ParseToBool(); // Output: false
+```
+
+## Contributing
+Contributions are welcome! If you have ideas for new extensions or improvements, feel free to fork the repository and submit a pull request.
+
+## License
+This project is licensed under the GNU GENERAL PUBLIC LICENSE. See the [LICENSE](LICENSE) file for details.
