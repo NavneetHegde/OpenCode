@@ -1,54 +1,78 @@
-# Starter pipeline
-
-
-
-
-variables:
-  Major: '1'
-  Minor: '0'
-  Patch: '0'
-  version: '1.0.0'
-
 trigger:
-- master
-
-pr : none
+  branches:
+    include:
+      - release/*
 
 pool:
   vmImage: 'windows-2019'
 
+variables:
+  patch: $[counter(variables['Build.SourceBranchName'], 0)]
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+# Set the value of $(Build.BuildNumber)
+name: 2.0.$(patch)
+
 steps:
-- task: DotNetCoreCLI@2
-  displayName: Build
+
+# Restore NuGet packages
+- task: NuGetCommand@2
+  displayName: 'Restore NuGet packages'
   inputs:
-    command: build
-    projects: '**/*.csproj'
-    arguments: '--configuration Release'
+    command: 'restore'
+    restoreSolution: '$(solution)'
+
+# Build the solution
+- task: VSBuild@1
+  displayName: 'Build the solution'
+  inputs:
+    solution: '$(solution)'
+    clean: true
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+# Run tests
+- task: VSTest@2
+  displayName: 'Run tests'
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+# Collect Code coverage
 - task: DotNetCoreCLI@2
+  displayName: 'Collect Code coverage'
   inputs:
     command: test
     projects: '**/*Tests/*.csproj'
-    arguments: '--configuration Release --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+
+# Install NuGet tool
 - task: NuGetToolInstaller@1
+  displayName: 'Install NuGet'
   inputs:
     versionSpec: '4.9.1'
     checkLatest: true
+
+# Pack the NuGet package
 - task: NuGetCommand@2
+  displayName: 'Pack NuGet package'
   inputs:
     command: pack
-    configuration: 'Release'
-    versioningScheme: byPrereleaseNumber
     packagesToPack: '**/*.csproj;!**/*Tests/*.csproj'
-    majorVersion: '$(Major)'
-    minorVersion: '$(Minor)'
-    patchVersion: '$(Patch)'
+    buildProperties: 'Configuration=$(buildConfiguration)'
+    versioningScheme: byPrereleaseNumber
+    majorVersion: '2'
+    minorVersion: '0'
+    patchVersion: '$(patch)'
+
+# Push the NuGet package
 - task: NuGetCommand@2
+  displayName: 'Push NuGet package'
   inputs:
     command: push
+    packagesToPush: '**/*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'OpenCode.Nuget'
-    arguments: '--configuration Release'
-- task: PublishCodeCoverageResults@1
-  inputs:
-    codeCoverageTool: 'JaCoCo'
-    summaryFileLocation:  $(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml
+    allowPackageConflicts: true
