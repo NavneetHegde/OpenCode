@@ -24,10 +24,11 @@ steps:
     versionSpec: '4.9.1'
     checkLatest: true
 
+# Install SDK
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '8.x
+    version: '8.x'
 
 # Restore NuGet packages
 - task: NuGetCommand@2
