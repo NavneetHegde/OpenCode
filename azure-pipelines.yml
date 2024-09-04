@@ -21,7 +21,7 @@ steps:
 - task: NuGetToolInstaller@1
   displayName: 'Install NuGet'
   inputs:
-    versionSpec: '4.9.1'
+    versionSpec: '4.9.2'
     checkLatest: true
 
 # Install SDK
