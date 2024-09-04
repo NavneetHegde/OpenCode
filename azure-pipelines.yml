@@ -17,6 +17,18 @@ name: 2.0.$(patch)
 
 steps:
 
+# Install NuGet tool
+- task: NuGetToolInstaller@1
+  displayName: 'Install NuGet'
+  inputs:
+    versionSpec: '4.9.1'
+    checkLatest: true
+
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '8.x
+
 # Restore NuGet packages
 - task: NuGetCommand@2
   displayName: 'Restore NuGet packages'
@@ -48,12 +60,12 @@ steps:
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
-# Install NuGet tool
-- task: NuGetToolInstaller@1
-  displayName: 'Install NuGet'
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish Code Coverage Results'
   inputs:
-    versionSpec: '4.9.1'
-    checkLatest: true
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml'
+    reportDirectory: '$(System.DefaultWorkingDirectory)/CodeCoverage'
 
 # Pack the NuGet package
 - task: NuGetCommand@2
