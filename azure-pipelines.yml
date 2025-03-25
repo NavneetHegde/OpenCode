@@ -1,54 +1,176 @@
-# Starter pipeline
-
-
-
-
+# version 
 variables:
-  Major: '1'
-  Minor: '0'
-  Patch: '0'
-  version: '1.0.0'
+  version: '3.0.0-$(Build.BuildId)'
 
+# Trigger the build stage on any branch push
 trigger:
-- master
+  branches:
+    include:
+      - '*'  # Runs build on any branch
 
-pr : none
+# Disable pipeline execution for regular pull requests
+pr: none
 
-pool:
-  vmImage: 'windows-2019'
+# ==========================
+# Stage 1: Build and Test
+# ==========================
+stages:
+- stage: Build
+  displayName: 'Build and Test'
+  jobs:
+  - job: Build
+    displayName: 'Build Solution'
+    pool:
+      vmImage: 'windows-2019'  # Use Windows 2019 image for the build
 
-steps:
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: build
-    projects: '**/*.csproj'
-    arguments: '--configuration Release'
-- task: DotNetCoreCLI@2
-  inputs:
-    command: test
-    projects: '**/*Tests/*.csproj'
-    arguments: '--configuration Release --collect "Code coverage"'
-- task: NuGetToolInstaller@1
-  inputs:
-    versionSpec: '4.9.1'
-    checkLatest: true
-- task: NuGetCommand@2
-  inputs:
-    command: pack
-    configuration: 'Release'
-    versioningScheme: byPrereleaseNumber
-    packagesToPack: '**/*.csproj;!**/*Tests/*.csproj'
-    majorVersion: '$(Major)'
-    minorVersion: '$(Minor)'
-    patchVersion: '$(Patch)'
-- task: NuGetCommand@2
-  inputs:
-    command: push
-    nuGetFeedType: external
-    publishFeedCredentials: 'OpenCode.Nuget'
-    arguments: '--configuration Release'
-- task: PublishCodeCoverageResults@1
-  inputs:
-    codeCoverageTool: 'JaCoCo'
-    summaryFileLocation:  $(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml
+    steps:
+    # Build the solution
+    - task: DotNetCoreCLI@2
+      displayName: 'Build Solution'
+      inputs:
+        command: build
+        projects: '**/*.sln'  # Build all project files
+        arguments: '--configuration Release /p:Version=$(version)'
+
+    # Run unit tests and collect code coverage
+    - task: DotNetCoreCLI@2
+      displayName: 'Run Unit Tests'
+      inputs:
+        command: test
+        projects: '**/*Tests/*.csproj'  # Run tests from test projects
+        arguments: '--configuration Release --collect "Code coverage"'
+
+    # Publish code coverage results
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish Code Coverage Results'
+      inputs:
+        codeCoverageTool: 'JaCoCo'
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml'
+
+    # Install NuGet tool
+    - task: NuGetToolInstaller@1
+      displayName: 'Install NuGet'
+      inputs:
+        versionSpec: '4.9.1'
+        checkLatest: true
+
+    - script: |
+        # Get version from .csproj (assuming the version is in a <Version> tag)
+        $csprojFiles = Get-ChildItem '**/*.csproj'
+        $version = [System.Xml.XmlDocument]::new()
+        $version.Load($csprojFiles[0].FullName)
+        $versionTag = $version.SelectSingleNode("//Project/PropertyGroup/Version")
+        $fullVersion = $versionTag.InnerText
+        Write-Host "Extracted version: $fullVersion"
+        # Extract major, minor, patch from the version string
+        $versionParts = $fullVersion -split '\.'
+        $majorVersion = $versionParts[0]
+        $minorVersion = $versionParts[1]
+        $patchVersion = $versionParts[2]
+        Write-Host "##vso[task.setvariable variable=Major]$majorVersion"
+        Write-Host "##vso[task.setvariable variable=Minor]$minorVersion"
+        Write-Host "##vso[task.setvariable variable=Patch]$patchVersion"
+      displayName: 'Extract Version from .csproj'
+        
+    # Pack the solution into a NuGet package
+    - task: NuGetCommand@2
+      displayName: 'Pack NuGet Package'
+      inputs:
+        command: pack
+        configuration: 'Release'
+        versioningScheme: byBuildNumber
+        packagesToPack: '**/*.csproj;!**/*Tests/*.csproj'
+        majorVersion: '$(Major)'  # Define Major, Minor, Patch variables
+        minorVersion: '$(Minor)'
+        patchVersion: '$(Patch)'
+    
+    # Publish the generated NuGet package as an artifact
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact (NuGet)'
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'drop'
+
+# ==========================
+# Stage 2: QA Environment
+# ==========================
+- stage: QA
+  displayName: 'Deploy to QA'
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'release'), startsWith(variables['System.PullRequest.SourceBranch'], 'feature/'))
+
+  jobs:
+  - deployment: DeployToQA
+    displayName: 'Deploy to QA Environment'
+    environment: QA  # Azure DevOps environment for QA
+    pool:
+      vmImage: 'windows-2019'
+
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          # Push the package to the QA NuGet feed
+          - task: NuGetCommand@2
+            displayName: 'Push to QA NuGet Feed'
+            inputs:
+              command: push
+              nuGetFeedType: external
+              publishFeedCredentials: 'QA.Nuget'
+              arguments: '--configuration Release'
+
+# ==========================
+# Stage 3: Pre-Production
+# ==========================
+- stage: PreProd
+  displayName: 'Deploy to Pre-Prod'
+  dependsOn: QA
+  condition: succeeded()  # Run only if QA deployment is successful
+
+  jobs:
+  - deployment: DeployToPreProd
+    displayName: 'Deploy to Pre-Prod Environment'
+    environment: PreProd  # Azure DevOps environment for Pre-Prod
+    pool:
+      vmImage: 'windows-2019'
+
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          # Push the package to the Pre-Prod NuGet feed
+          - task: NuGetCommand@2
+            displayName: 'Push to Pre-Prod NuGet Feed'
+            inputs:
+              command: push
+              nuGetFeedType: external
+              publishFeedCredentials: 'PreProd.Nuget'
+              arguments: '--configuration Release'
+
+# ==========================
+# Stage 4: Production
+# ==========================
+- stage: Prod
+  displayName: 'Deploy to Production'
+  dependsOn: PreProd
+  condition: succeeded()  # Run only if Pre-Prod deployment is successful
+
+  jobs:
+  - deployment: DeployToProd
+    displayName: 'Deploy to Production Environment'
+    environment: Prod  # Azure DevOps environment for Production
+    pool:
+      vmImage: 'windows-2019'
+
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          # Push the package to the Production NuGet feed
+          - task: NuGetCommand@2
+            displayName: 'Push to Production NuGet Feed'
+            inputs:
+              command: push
+              nuGetFeedType: external
+              publishFeedCredentials: 'Prod.Nuget'
+              arguments: '--configuration Release'

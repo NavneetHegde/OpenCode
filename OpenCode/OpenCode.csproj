@@ -1,15 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>NET9.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="StringExtension.Decimal.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="StringExtension\StringExtension.Decimal.cs" />
-  </ItemGroup>
 
 </Project>
