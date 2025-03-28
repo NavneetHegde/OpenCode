@@ -1,6 +1,7 @@
 # version 
 variables:
   version: '3.0.0-$(Build.BuildId)'
+  vmImage: 'windows-latest'
 
 # Trigger the build stage on any branch push
 trigger:
@@ -21,7 +22,7 @@ stages:
   - job: Build
     displayName: 'Build Solution'
     pool:
-      vmImage: 'windows-2019'  # Use Windows 2019 image for the build
+      vmImage: '$(vmImage)'  # Use Windows 2019 image for the build
 
     steps:
     # Build the solution
@@ -41,17 +42,16 @@ stages:
         arguments: '--configuration Release --collect "Code coverage"'
 
     # Publish code coverage results
-    - task: PublishCodeCoverageResults@1
+    - task: PublishCodeCoverageResults@2
       displayName: 'Publish Code Coverage Results'
       inputs:
-        codeCoverageTool: 'JaCoCo'
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml'
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/cobertura/coverage.xml'
 
     # Install NuGet tool
     - task: NuGetToolInstaller@1
       displayName: 'Install NuGet'
       inputs:
-        versionSpec: '4.9.1'
+        versionSpec: '6.13.2'
         checkLatest: true
 
     - script: |
@@ -104,7 +104,7 @@ stages:
     displayName: 'Deploy to QA Environment'
     environment: QA  # Azure DevOps environment for QA
     pool:
-      vmImage: 'windows-2019'
+      vmImage: '$(vmImage)'
 
     strategy:
       runOnce:
@@ -132,7 +132,7 @@ stages:
 #     displayName: 'Deploy to Pre-Prod Environment'
 #     environment: PreProd  # Azure DevOps environment for Pre-Prod
 #     pool:
-#       vmImage: 'windows-2019'
+#       vmImage: '$(vmImage)'
 
 #     strategy:
 #       runOnce:
@@ -160,7 +160,7 @@ stages:
 #     displayName: 'Deploy to Production Environment'
 #     environment: Prod  # Azure DevOps environment for Production
 #     pool:
-#       vmImage: 'windows-2019'
+#       vmImage: '$(vmImage)'
 
 #     strategy:
 #       runOnce:
