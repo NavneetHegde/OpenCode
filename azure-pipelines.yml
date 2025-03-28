@@ -1,7 +1,7 @@
 # version 
 variables:
-  version: '3.0.0-$(Build.BuildId)'
   vmImage: 'windows-latest'
+  VersionSuffix: 'rc-$(Build.BuildId)'  # Generates a unique version per build
 
 # Trigger the build stage on any branch push
 trigger:
@@ -12,9 +12,9 @@ trigger:
 # Disable pipeline execution for regular pull requests
 pr: none
 
-# ==========================
+# =======================
 # Stage 1: Build and Test
-# ==========================
+# =======================
 stages:
 - stage: Build
   displayName: 'Build and Test'
@@ -25,13 +25,40 @@ stages:
       vmImage: '$(vmImage)'  # Use Windows 2019 image for the build
 
     steps:
+    - task: PowerShell@2
+      displayName: 'Update VersionSuffix in Directory.Build.props'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $propsFile = "Directory.Build.props"
+          [xml]$xml = Get-Content $propsFile
+    
+          # Extract current VersionSuffix
+          $versionSuffixNode = $xml.Project.PropertyGroup.VersionSuffix
+          $versionSuffix = $versionSuffixNode.'#text'
+    
+          if ($versionSuffix -match "(.+)-(\d+)$") {
+              $prefix = $matches[1]
+              $newVersionSuffix = "$prefix-$(Build.BuildId)"
+             
+              # Update VersionSuffix
+              $versionSuffixNode.'#text' = $newVersionSuffix
+              $xml.Save($propsFile)
+    
+              Write-Host "Updated VersionSuffix to: $newVersionSuffix"
+              Write-Host "##vso[task.setvariable variable=NewVersionSuffix]$newVersionSuffix"
+          } else {
+              Write-Host "Error: VersionSuffix format is invalid"
+              exit 1
+          }
+
     # Build the solution
     - task: DotNetCoreCLI@2
       displayName: 'Build Solution'
       inputs:
         command: build
         projects: '**/*.sln'  # Build all project files
-        arguments: '--configuration Release /p:Version=$(version)'
+        arguments: '--configuration Release'
 
     # Run unit tests and collect code coverage
     - task: DotNetCoreCLI@2
@@ -39,7 +66,7 @@ stages:
       inputs:
         command: test
         projects: '**/*Tests/*.csproj'  # Run tests from test projects
-        arguments: '--configuration Release /p:Version=$(version) --collect "Code coverage"'
+        arguments: '--configuration Release --collect "Code coverage"'
 
     # Publish code coverage results
     - task: PublishCodeCoverageResults@2
@@ -91,9 +118,9 @@ stages:
         pathToPublish: '$(Build.ArtifactStagingDirectory)'
         artifactName: 'drop'
 
-# ==========================
+# =======================
 # Stage 2: QA Environment
-# ==========================
+# =======================
 - stage: QA
   displayName: 'Deploy to QA'
   dependsOn: Build
@@ -119,9 +146,9 @@ stages:
               publishVstsFeed: 'QAFeed'  # Replace with your Azure Artifacts feed name
               arguments: '--configuration Release'
 
-# # ==========================
+# # =======================
 # # Stage 3: Pre-Production
-# # ==========================
+# # =======================
 # - stage: PreProd
 #   displayName: 'Deploy to Pre-Prod'
 #   dependsOn: QA
@@ -147,9 +174,9 @@ stages:
 #               publishFeedCredentials: 'PreProd.Nuget'
 #               arguments: '--configuration Release'
 
-# # ==========================
+# # ===================
 # # Stage 4: Production
-# # ==========================
+# # ===================
 # - stage: Prod
 #   displayName: 'Deploy to Production'
 #   dependsOn: PreProd
