@@ -35,15 +35,14 @@ stages:
     
           # Extract current VersionSuffix
           $versionSuffixNode = $xml.Project.PropertyGroup.VersionSuffix
-          $versionSuffix = $versionSuffixNode.'#text'
-          Write-Host "Suffix: $versionSuffix"
+          Write-Host "Suffix: $versionSuffixNode"
     
           if ($versionSuffix -match "(.+)-(\d+)$") {
               $prefix = $matches[1]
               $newVersionSuffix = "$prefix-$(Build.BuildId)"
              
               # Update VersionSuffix
-              $versionSuffixNode.'#text' = $newVersionSuffix
+              $versionSuffixNode = $newVersionSuffix
               $xml.Save($propsFile)
     
               Write-Host "Updated VersionSuffix to: $newVersionSuffix"
