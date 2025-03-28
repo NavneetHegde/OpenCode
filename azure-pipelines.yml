@@ -97,7 +97,7 @@ stages:
 - stage: QA
   displayName: 'Deploy to QA'
   dependsOn: Build
-  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'release'), startsWith(variables['System.PullRequest.SourceBranch'], 'feature/'))
+  #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'release'), startsWith(variables['System.PullRequest.SourceBranch'], 'feature/'))
 
   jobs:
   - deployment: DeployToQA
@@ -112,65 +112,65 @@ stages:
           steps:
           # Push the package to the QA NuGet feed
           - task: NuGetCommand@2
-            displayName: 'Push to QA NuGet Feed'
+            displayName: 'Push to QA Internal Feed'
             inputs:
               command: push
-              nuGetFeedType: external
-              publishFeedCredentials: 'QA.Nuget'
+              nuGetFeedType: internal
+              publishVstsFeed: 'QAFeed'  # Replace with your Azure Artifacts feed name
               arguments: '--configuration Release'
 
-# ==========================
-# Stage 3: Pre-Production
-# ==========================
-- stage: PreProd
-  displayName: 'Deploy to Pre-Prod'
-  dependsOn: QA
-  condition: succeeded()  # Run only if QA deployment is successful
+# # ==========================
+# # Stage 3: Pre-Production
+# # ==========================
+# - stage: PreProd
+#   displayName: 'Deploy to Pre-Prod'
+#   dependsOn: QA
+#   condition: succeeded()  # Run only if QA deployment is successful
 
-  jobs:
-  - deployment: DeployToPreProd
-    displayName: 'Deploy to Pre-Prod Environment'
-    environment: PreProd  # Azure DevOps environment for Pre-Prod
-    pool:
-      vmImage: 'windows-2019'
+#   jobs:
+#   - deployment: DeployToPreProd
+#     displayName: 'Deploy to Pre-Prod Environment'
+#     environment: PreProd  # Azure DevOps environment for Pre-Prod
+#     pool:
+#       vmImage: 'windows-2019'
 
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          # Push the package to the Pre-Prod NuGet feed
-          - task: NuGetCommand@2
-            displayName: 'Push to Pre-Prod NuGet Feed'
-            inputs:
-              command: push
-              nuGetFeedType: external
-              publishFeedCredentials: 'PreProd.Nuget'
-              arguments: '--configuration Release'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           # Push the package to the Pre-Prod NuGet feed
+#           - task: NuGetCommand@2
+#             displayName: 'Push to Pre-Prod NuGet Feed'
+#             inputs:
+#               command: push
+#               nuGetFeedType: external
+#               publishFeedCredentials: 'PreProd.Nuget'
+#               arguments: '--configuration Release'
 
-# ==========================
-# Stage 4: Production
-# ==========================
-- stage: Prod
-  displayName: 'Deploy to Production'
-  dependsOn: PreProd
-  condition: succeeded()  # Run only if Pre-Prod deployment is successful
+# # ==========================
+# # Stage 4: Production
+# # ==========================
+# - stage: Prod
+#   displayName: 'Deploy to Production'
+#   dependsOn: PreProd
+#   condition: succeeded()  # Run only if Pre-Prod deployment is successful
 
-  jobs:
-  - deployment: DeployToProd
-    displayName: 'Deploy to Production Environment'
-    environment: Prod  # Azure DevOps environment for Production
-    pool:
-      vmImage: 'windows-2019'
+#   jobs:
+#   - deployment: DeployToProd
+#     displayName: 'Deploy to Production Environment'
+#     environment: Prod  # Azure DevOps environment for Production
+#     pool:
+#       vmImage: 'windows-2019'
 
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          # Push the package to the Production NuGet feed
-          - task: NuGetCommand@2
-            displayName: 'Push to Production NuGet Feed'
-            inputs:
-              command: push
-              nuGetFeedType: external
-              publishFeedCredentials: 'Prod.Nuget'
-              arguments: '--configuration Release'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           # Push the package to the Production NuGet feed
+#           - task: NuGetCommand@2
+#             displayName: 'Push to Production NuGet Feed'
+#             inputs:
+#               command: push
+#               nuGetFeedType: external
+#               publishFeedCredentials: 'Prod.Nuget'
+#               arguments: '--configuration Release'
