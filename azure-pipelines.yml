@@ -36,6 +36,7 @@ stages:
           # Extract current VersionSuffix
           $versionSuffixNode = $xml.Project.PropertyGroup.VersionSuffix
           $versionSuffix = $versionSuffixNode.'#text'
+          Write-Host "Suffix: $versionSuffix"
     
           if ($versionSuffix -match "(.+)-(\d+)$") {
               $prefix = $matches[1]
