@@ -82,24 +82,6 @@ stages:
         versionSpec: '6.13.2'
         checkLatest: true
 
-    - script: |
-        # Get version from .csproj (assuming the version is in a <Version> tag)
-        $csprojFiles = Get-ChildItem '**/*.csproj'
-        $version = [System.Xml.XmlDocument]::new()
-        $version.Load($csprojFiles[0].FullName)
-        $versionTag = $version.SelectSingleNode("//Project/PropertyGroup/Version")
-        $fullVersion = $versionTag.InnerText
-        Write-Host "Extracted version: $fullVersion"
-        # Extract major, minor, patch from the version string
-        $versionParts = $fullVersion -split '\.'
-        $majorVersion = $versionParts[0]
-        $minorVersion = $versionParts[1]
-        $patchVersion = $versionParts[2]
-        Write-Host "##vso[task.setvariable variable=Major]$majorVersion"
-        Write-Host "##vso[task.setvariable variable=Minor]$minorVersion"
-        Write-Host "##vso[task.setvariable variable=Patch]$patchVersion"
-      displayName: 'Extract Version from .csproj'
-        
     # Pack the solution into a NuGet package
     - task: NuGetCommand@2
       displayName: 'Pack NuGet Package'
