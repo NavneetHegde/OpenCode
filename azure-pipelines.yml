@@ -74,7 +74,7 @@ stages:
       inputs:
         command: test
         projects: '**/*Tests/*.csproj'  # Run tests from test projects
-        arguments: '--configuration Release --collect:"XPlat Code Coverage" --results-directory $(Build.SourcesDirectory)/TestResults'
+        arguments: '--configuration Release --collect:"Code Coverage" --results-directory "$(Build.SourcesDirectory)/TestResults"'
     
     # Publish code coverage results
     - task: PublishCodeCoverageResults@2
