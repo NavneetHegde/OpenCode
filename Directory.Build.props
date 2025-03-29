@@ -2,9 +2,9 @@
 	<PropertyGroup>
 		<!-- Versioning setup -->
 		<VersionPrefix>3.0.0</VersionPrefix>
-		<VersionSuffix>rc-001</VersionSuffix>
+		<VersionSuffix>rc.1</VersionSuffix>
 		<AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
-		<FileVersion>$(VersionPrefix).$(VersionSuffix)</FileVersion>
-		<InformationalVersion>$(VersionPrefix).$(VersionSuffix)</InformationalVersion>
+		<FileVersion>$(VersionPrefix).0</FileVersion>
+		<InformationalVersion>$(VersionPrefix)-$(VersionSuffix)</InformationalVersion>
 	</PropertyGroup>
 </Project>

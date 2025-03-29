@@ -25,6 +25,13 @@ stages:
       vmImage: '$(vmImage)'  # Use Windows 2019 image for the build
 
     steps:
+    # Install NuGet tool
+    - task: NuGetToolInstaller@1
+      displayName: 'Install NuGet'
+      inputs:
+        versionSpec: '6.13.2'
+        checkLatest: true
+
     - task: PowerShell@2
       displayName: 'Update VersionSuffix in Directory.Build.props'
       inputs:
@@ -67,20 +74,14 @@ stages:
       inputs:
         command: test
         projects: '**/*Tests/*.csproj'  # Run tests from test projects
-        arguments: '--configuration Release --collect "Code coverage"'
-
+        arguments: '--configuration Release --collect:"XPlat Code Coverage" --results-directory $(Build.SourcesDirectory)/TestResults'
+    
     # Publish code coverage results
     - task: PublishCodeCoverageResults@2
       displayName: 'Publish Code Coverage Results'
       inputs:
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/cobertura/coverage.xml'
-
-    # Install NuGet tool
-    - task: NuGetToolInstaller@1
-      displayName: 'Install NuGet'
-      inputs:
-        versionSpec: '6.13.2'
-        checkLatest: true
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/**/coverage.cobertura.xml'
 
     # Pack the solution into a NuGet package
     - task: DotNetCoreCLI@2
