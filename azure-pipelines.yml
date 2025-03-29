@@ -120,12 +120,18 @@ stages:
           steps:
             - task: NuGetToolInstaller@1                            # Minimum required NuGet version: 4.8.0.5385+.
               displayName: 'NuGet Tool Installer'
+
+           - task: PowerShell@2
+             displayName: 'List All Pipeline Variables'
+             inputs:
+               targetType: 'inline'
+               script: 'Get-ChildItem Env: | Sort-Object Name | Format-Table -AutoSize'
             
             - task: NuGetAuthenticate@1
               displayName: 'NuGet Authenticate'
             
             - script: |
-                  nuget.exe push -Source "https://pkgs.dev.azure.com/navneethegde/OpenCode/_packaging/QAFeed/nuget/v3/index.json" -ApiKey az $(Build.ArtifactStagingDirectory)\*.nupkg
+                  nuget.exe push -Source "https://pkgs.dev.azure.com/navneethegde/OpenCode/_packaging/QAFeed/nuget/v3/index.json" -ApiKey az $(Pipeline.Workspace)\drop\*.nupkg
               displayName: Push
 
           # # Push the package to the QA NuGet feed
