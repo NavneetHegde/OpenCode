@@ -125,7 +125,7 @@ stages:
               displayName: 'NuGet Authenticate'
             
             - script: |
-                  nuget.exe push -Source "QAFeed" -ApiKey az $(Build.ArtifactStagingDirectory)\*.nupkg
+                  nuget.exe push -Source "https://pkgs.dev.azure.com/navneethegde/OpenCode/_packaging/QAFeed/nuget/v3/index.json" -ApiKey az $(Build.ArtifactStagingDirectory)\*.nupkg
               displayName: Push
 
           # # Push the package to the QA NuGet feed
