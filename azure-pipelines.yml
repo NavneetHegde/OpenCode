@@ -88,11 +88,9 @@ stages:
       inputs:
         command: pack
         configuration: 'Release'
-        versioningScheme: byBuildNumber
+        versioningScheme: off
         packagesToPack: '**/*.csproj;!**/*Tests/*.csproj'
-        majorVersion: '$(Major)'  # Define Major, Minor, Patch variables
-        minorVersion: '$(Minor)'
-        patchVersion: '$(Patch)'
+        version: $NewVersionSuffix
     
     # Publish the generated NuGet package as an artifact
     - task: PublishBuildArtifacts@1
