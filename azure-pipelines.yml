@@ -45,7 +45,7 @@ stages:
           $versionSuffix = $versionSuffixNode
           Write-Host "Suffix: $versionSuffix"
     
-          if ($versionSuffix -match "(.+)-(\d+)$") {
+          if ($versionSuffix -match "(.+).(\d+)$") {
               $prefix = $matches[1]
               $newVersionSuffix = "$prefix-$(Build.BuildId)"
              
