@@ -83,7 +83,7 @@ stages:
         checkLatest: true
 
     # Pack the solution into a NuGet package
-    - task: NuGetCommand@2
+    - task: DotNetCoreCLI@2
       displayName: 'Pack NuGet Package'
       inputs:
         command: pack
