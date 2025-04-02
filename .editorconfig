@@ -1,0 +1,143 @@
+﻿﻿# Top-most EditorConfig file
+# See https://editorconfig.org for more information
+
+# Root of the .editorconfig file
+root = true
+
+# C# files (for Blazor)
+[*.cs]
+# Use spaces for indentation
+indent_style = space
+# Set the indentation width to 4 spaces
+indent_size = 4
+# Ensure a newline at the end of the file
+end_of_line = lf
+# Trim trailing whitespace
+trim_trailing_whitespace = true
+# Insert a final newline
+insert_final_newline = true
+# Set the charset to UTF-8
+charset = utf-8
+# C# code formatting options
+dotnet_style_prefer_implicit_array_type = true
+dotnet_style_prefer_collection_initializer = true
+dotnet_style_prefer_implicit_object_creation = true
+csharp_indent_labels = one_less_than_current
+csharp_using_directive_placement = outside_namespace:silent
+csharp_prefer_simple_using_statement = true:suggestion
+csharp_prefer_braces = true:silent
+csharp_style_namespace_declarations = block_scoped:silent
+csharp_style_prefer_method_group_conversion = true:silent
+csharp_style_prefer_top_level_statements = true:silent
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_prefer_system_threading_lock = true:suggestion
+csharp_style_expression_bodied_methods = false:silent
+csharp_style_expression_bodied_constructors = false:silent
+csharp_style_expression_bodied_operators = false:silent
+csharp_style_expression_bodied_properties = true:silent
+csharp_style_expression_bodied_indexers = true:silent
+csharp_style_expression_bodied_accessors = true:silent
+csharp_style_expression_bodied_lambdas = true:silent
+csharp_style_expression_bodied_local_functions = false:silent
+
+# Razor files (.razor)
+[*.razor]
+# Use spaces for indentation
+indent_style = space
+# Set the indentation width to 4 spaces
+indent_size = 4
+# Ensure a newline at the end of the file
+end_of_line = lf
+# Trim trailing whitespace
+trim_trailing_whitespace = true
+# Insert a final newline
+insert_final_newline = true
+# Set the charset to UTF-8
+charset = utf-8
+
+# JavaScript and TypeScript files (if you're using them for frontend)
+[*.{js,ts}]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# HTML files (for Blazor's HTML components)
+[*.html]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# JSON files
+[*.json]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# CSS/SCSS files
+[*.{css,scss}]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{cs,vb}]
+#### Naming styles ####
+
+# Naming rules
+
+dotnet_naming_rule.interface_should_be_begins_with_i.severity = suggestion
+dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
+dotnet_naming_rule.interface_should_be_begins_with_i.style = begins_with_i
+
+dotnet_naming_rule.types_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.types_should_be_pascal_case.symbols = types
+dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
+
+dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.non_field_members_should_be_pascal_case.symbols = non_field_members
+dotnet_naming_rule.non_field_members_should_be_pascal_case.style = pascal_case
+
+# Symbol specifications
+
+dotnet_naming_symbols.interface.applicable_kinds = interface
+dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.interface.required_modifiers = 
+
+dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
+dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.types.required_modifiers = 
+
+dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, method
+dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.non_field_members.required_modifiers = 
+
+# Naming styles
+
+dotnet_naming_style.begins_with_i.required_prefix = I
+dotnet_naming_style.begins_with_i.required_suffix = 
+dotnet_naming_style.begins_with_i.word_separator = 
+dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+dotnet_naming_style.pascal_case.required_prefix = 
+dotnet_naming_style.pascal_case.required_suffix = 
+dotnet_naming_style.pascal_case.word_separator = 
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+dotnet_naming_style.pascal_case.required_prefix = 
+dotnet_naming_style.pascal_case.required_suffix = 
+dotnet_naming_style.pascal_case.word_separator = 
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+dotnet_style_operator_placement_when_wrapping = beginning_of_line
+tab_width = 4
+indent_size = 4
+end_of_line = lf
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion

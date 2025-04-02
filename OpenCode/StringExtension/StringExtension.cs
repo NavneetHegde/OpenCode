@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Security.Cryptography;
 
@@ -52,7 +52,7 @@ namespace OpenCode
                 return string.Empty;
             else
             {
-                using (var hashAlgorithm = new SHA256CryptoServiceProvider())
+                using (SHA256 hashAlgorithm = SHA256.Create())
                 {
                     var byteValue = System.Text.Encoding.UTF8.GetBytes(input);
                     var byteHash = hashAlgorithm.ComputeHash(byteValue);

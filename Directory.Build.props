@@ -1,0 +1,15 @@
+<Project>
+	<PropertyGroup>
+		<VersionPrefix>3.0.0</VersionPrefix>
+		<VersionSuffix>local</VersionSuffix>
+		<!-- This will be replaced dynamically by GitVersion -->
+		<AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+		<FileVersion>$(VersionPrefix).0</FileVersion>
+		<InformationalVersion>$(VersionPrefix)-$(VersionSuffix)</InformationalVersion>
+		<PackageVersion>$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Product>OpenCode</Product>
+	</PropertyGroup>
+</Project>
