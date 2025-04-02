@@ -1,17 +1,11 @@
 <Project>
 	<PropertyGroup>
-		<!-- Base version controlled manually or by GitVersion -->
 		<VersionPrefix>3.0.0</VersionPrefix>
-
-		<!-- Default VersionSuffix (will be replaced by the pipeline) -->
 		<VersionSuffix>local</VersionSuffix>
-
-		<!-- Complete Version information -->
+		<!-- This will be replaced dynamically by GitVersion -->
 		<AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
 		<FileVersion>$(VersionPrefix).0</FileVersion>
 		<InformationalVersion>$(VersionPrefix)-$(VersionSuffix)</InformationalVersion>
-
-		<!-- NuGet package version -->
 		<PackageVersion>$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
 	</PropertyGroup>
 
