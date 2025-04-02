@@ -1,148 +1,110 @@
-﻿# Git Flow Package Development and Release
+﻿# GitLab Release Branch Flow
 
+## Overview
+This repository follows the **GitLab Release Branch Flow**, ensuring structured and reliable deployments.
+
+### **Flow Summary:**
+- A **release branch** is created from `main` for every new production release.
+- The release branch generates a **production-ready build** and deploys it to **QA** and **Production** environments.
+- Once deployed to **Production**, the changes from the release branch are merged back into `main`.
+- Any **new features or changes** are based on the current release branch and merged back into it.
+- For each **new release**, a fresh **release branch** is created from `main`.
+
+---
 ## **Branching Strategy**
 
-| Branch      | Purpose                     | Versioning                       | Deployment                   |
-| ----------- | --------------------------- | -------------------------------- | ---------------------------- |
-| `main`      | Stable production code      | `1.0.0`, `1.1.0`                 | **Public NuGet (NuGet.org)** |
-| `develop`   | Active development          | `1.1.0-beta.1`, `1.1.0-beta.2`   | **Internal NuGet**           |
-| `feature/*` | New feature development     | `1.2.0-alpha.1`, `1.2.0-alpha.2` | No deployment                |
-| `release/*` | Pre-release testing         | `1.1.0-rc.1`, `1.1.0-rc.2`       | **Staging NuGet**            |
-| `hotfix/*`  | Urgent fixes for production | `1.0.1`, `1.0.2`                 | **Public NuGet**             |
+### **1️⃣ Creating a New Release Branch**
+```sh
+# Create a new release branch from main
+ git checkout main
+ git pull origin main
+ git checkout -b release/vX.Y
+ git push origin release/vX.Y
+```
 
----
+### **2️⃣ Feature Development**
+- New features are branched from the **current release branch**:
+```sh
+# Create a feature branch from the release branch
+git checkout release/vX.Y
+git checkout -b feature/awesome-feature
+git push origin feature/awesome-feature
+```
+- Once completed, the feature branch is merged back into the release branch:
+```sh
+git checkout release/vX.Y
+git merge feature/awesome-feature
+git push origin release/vX.Y
+```
 
-## **Git Workflow & Development Process**
+### **3️⃣ Deploying to QA**
+- The release branch is **deployed to QA** for testing using CI/CD.
+- Fixes found in QA are applied directly to the **release branch**.
 
-### **1️⃣ Start New Feature**
+### **4️⃣ Deploying to Production**
+- Once QA is approved, the release branch is deployed to production.
+- After a successful deployment, the release branch is merged into `main`:
+```sh
+git checkout main
+git merge release/vX.Y
+git push origin main
+```
 
-- Create a feature branch from `develop`:
-  ```sh
-  git checkout -b feature/new-authentication develop
-  ```
-- Implement changes and commit:
-  ```sh
-  git add .
-  git commit -m "Added OAuth2 authentication"
-  ```
-- Push the branch and create a **Pull Request (PR)** to `develop`.
-
-### **2️⃣ Merge Feature into Develop**
-
-- Once reviewed, merge the feature into `develop`:
-  ```sh
-  git checkout develop
-  git merge feature/new-authentication
-  git push origin develop
-  ```
-- This triggers a **CI build** and publishes an **alpha/beta NuGet package**.
-
-### **3️⃣ Preparing for a Release**
-
-- Create a `release` branch from `develop`:
-  ```sh
-  git checkout -b release/1.1.0 develop
-  git push origin release/1.1.0
-  ```
-- Only **bug fixes** are allowed here.
-- A **Release Candidate (**\`\`**) NuGet package** is created.
-
-### **4️⃣ Finalizing the Release**
-
-- Merge `release/1.1.0` into `main`:
-  ```sh
-  git checkout main
-  git merge release/1.1.0
-  git tag v1.1.0
-  git push origin main --tags
-  ```
-- Merge `release/1.1.0` back into `develop`:
-  ```sh
-  git checkout develop
-  git merge release/1.1.0
-  git push origin develop
-  ```
-- **NuGet Package** `1.1.0` is published to NuGet.org.
-
-### **5️⃣ Hotfixes for Critical Bugs**
-
-- Create a `hotfix` branch from `main`:
-  ```sh
-  git checkout -b hotfix/1.1.1 main
-  ```
-- After fixing the bug:
-  ```sh
-  git add .
-  git commit -m "Fixed API authentication issue"
-  git checkout main
-  git merge hotfix/1.1.1
-  git tag v1.1.1
-  git push origin main --tags
-  ```
-- \*\*NuGet Package \*\*\`\` is released.
-- Merge hotfix back into `develop`:
-  ```sh
-  git checkout develop
-  git merge hotfix/1.1.1
-  git push origin develop
-  ```
-
----
-
-## **GitVersion Configuration (Auto Versioning)**
-
-Add this to `.azure/pipelines/GitVersion.yml`:
-
-```yaml
-mode: ContinuousDeployment
-
-branches:
-  main:
-    tag: ''                 # No pre-release tag for stable versions.
-    is-release-branch: true # Merging here creates a stable version.
-    increment: Patch        # Increment patch version for each merge.
-
-  develop:
-    tag: beta              # Pre-release versions (e.g., 1.0.0-beta.1).
-    increment: Minor       # Increase minor version for new features.
-
-  release:
-    tag: rc               # Release candidate versions (e.g., 1.0.0-rc.1).
-    is-release-branch: true
-    increment: Patch
-
-  feature:
-    tag: alpha             # Feature branches get an alpha version.
-    increment: Minor       # Each feature branch increments minor.
-
-  hotfix:
-    tag: ''                # No special tag, just an increment.
-    increment: Patch       # Hotfixes increase patch version.
-
-  support:
-    tag: support           # Special branch (if needed).
-    increment: Patch
-
-ignore:
-  sha: []                  # Can ignore specific commits if needed.
-
-merge-message-formats: {}   # No special rules for merge commits.
+### **5️⃣ Preparing for the Next Release**
+- After deployment, a **new release branch** is created from `main` for the next version.
+```sh
+git checkout main
+git pull origin main
+git checkout -b release/vX.Z
+git push origin release/vX.Z
 ```
 
 ---
+## **CI/CD Pipeline Integration**
 
-### **2️⃣ NuGet Deployment Strategy**
+### **Pipeline Stages:**
+1. **Build** - Compiles and packages the application.
+2. **Deploy to QA** - Deploys the release branch to a **staging/QA environment**.
+3. **Deploy to Production** - Once validated in QA, the build is deployed to production.
+4. **Merge to Main** - After production deployment, changes are merged back into `main`.
 
-| Branch      | NuGet Version  | Deployment Target        |
-| ----------- | -------------- | ------------------------ |
-| `develop`   | `1.1.0-beta.1` | Internal NuGet feed      |
-| `release/*` | `1.1.0-rc.1`   | Staging NuGet feed       |
-| `main`      | `1.1.0`        | Public NuGet (NuGet.org) |
+---
+## **Example GitLab CI/CD Configuration (`.gitlab-ci.yml`)**
+```yaml
+stages:
+  - build
+  - deploy_qa
+  - deploy_prod
 
-## **Summary**
+build:
+  stage: build
+  script:
+    - echo "Building the application..."
+    - ./build.sh
+  artifacts:
+    paths:
+      - build/
 
-1️⃣ **Develop Features**  → Feature branches → `develop` → **beta NuGet package**\
-2️⃣ **Prepare for Release**  → `release/*` → **rc NuGet package**\
-3️⃣ **Final Release**  → `main` → **Final NuGet package**\
-4️⃣ **Bug Fixes**  → `hotfix/*` → **Patch NuGet package**
+qa_deploy:
+  stage: deploy_qa
+  script:
+    - echo "Deploying to QA..."
+  only:
+    - /^release\/.*$/
 
+prod_deploy:
+  stage: deploy_prod
+  script:
+    - echo "Deploying to Production..."
+  only:
+    - /^release\/.*$/
+    - main
+```
+
+---
+## **Best Practices**
+✔ Keep `main` always production-ready.
+✔ Use **feature branches** for new developments.
+✔ Deploy to **QA** before Production.
+✔ Merge the **release branch** back to `main` after successful deployment.
+✔ Create a **new release branch** for every major release.
