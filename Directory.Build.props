@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<VersionPrefix>3.0.14</VersionPrefix>
+		<VersionPrefix>3.0.15</VersionPrefix>
 		<VersionSuffix>local</VersionSuffix>
 		<!-- This will be replaced dynamically by GitVersion -->
 		<AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
