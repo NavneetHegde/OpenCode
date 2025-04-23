@@ -1,21 +1,15 @@
 <Project>
 	<PropertyGroup>
-		<!-- Default values (used for local builds or fallback) -->
-		<DefaultVersion>3.0.30</DefaultVersion>
-		<DefaultAssemblyVersion>3.0.30.0</DefaultAssemblyVersion>
-		<DefaultFileVersion>3.0.30.0</DefaultFileVersion>
-		<DefaultInformationalVersion>3.0.30-local</DefaultInformationalVersion>
-		<DefaultPackageVersion>3.0.30-local</DefaultPackageVersion>
+		<VersionPrefix>3.0.31</VersionPrefix>
+		<VersionSuffix>local</VersionSuffix>
+		<!-- This will be replaced dynamically by GitVersion -->
+		<AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+		<FileVersion>$(VersionPrefix).0</FileVersion>
+		<InformationalVersion>$(VersionPrefix)-$(VersionSuffix)</InformationalVersion>
+		<PackageVersion>$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
+	</PropertyGroup>
 
-		<!-- Use values from GitVersion if supplied via CLI/pipeline -->
-		<Version Condition="'$(Version)' == ''">$(DefaultVersion)</Version>
-		<AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(DefaultAssemblyVersion)</AssemblyVersion>
-		<FileVersion Condition="'$(FileVersion)' == ''">$(DefaultFileVersion)</FileVersion>
-		<InformationalVersion Condition="'$(InformationalVersion)' == ''">$(DefaultInformationalVersion)</InformationalVersion>
-		<PackageVersion Condition="'$(PackageVersion)' == ''">$(DefaultPackageVersion)</PackageVersion>
-
-		<!-- Ensure deterministic builds and consistent versions -->
-		<Deterministic>true</Deterministic>
-		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	<PropertyGroup>
+		<Product>OpenCode</Product>
 	</PropertyGroup>
 </Project>
