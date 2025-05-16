@@ -1,11 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenCode.Tests", "OpenCode.Tests\OpenCode.Tests.csproj", "{E311FB84-43E7-440B-97F9-26DC1F6C889C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCode", "OpenCode\OpenCode.csproj", "{4F1933E1-AC1D-4E0C-9E08-B2C8ED222835}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".azure-pipeline", ".azure-pipeline", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.azure\pipelines\azure-pipeline-release-artifact.yml = .azure\pipelines\azure-pipeline-release-artifact.yml
+		.azure\pipelines\azure-pipelines.yml = .azure\pipelines\azure-pipelines.yml
+		.azure\pipelines\GitVersion.yml = .azure\pipelines\GitVersion.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
