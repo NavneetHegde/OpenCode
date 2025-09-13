@@ -1,7 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>NET9.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+
+		<!-- NuGet package metadata -->
+		<Version>3.0.0</Version>
+		<PackageId>OpenCode</PackageId>
+		<Authors>Navneet Hegde</Authors>
+		<Company>ZerOne</Company>
+		<Description>OpenCode is a .NET 9 library providing useful string extension methods for common operations such as formatting, parsing, and hashing.</Description>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- README and LICENSE at solution root -->
+		<None Include="..\README.md" Pack="true" PackagePath="\" />
+		<None Include="..\LICENSE"  Pack="true" PackagePath="\" />
+	</ItemGroup>
 
 </Project>
+
