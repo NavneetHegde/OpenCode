@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11010.61 d18.0
+VisualStudioVersion = 18.0.11010.61
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenCode.Tests", "OpenCode.Tests\OpenCode.Tests.csproj", "{E311FB84-43E7-440B-97F9-26DC1F6C889C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenCode", "OpenCode\OpenCode.csproj", "{4F1933E1-AC1D-4E0C-9E08-B2C8ED222835}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{275835F9-1BD5-418D-8C1F-063CC6E1DF75}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DF47C6DA-41E1-47AB-84B6-2D81BBF06403}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\nuget-publish.yml = .github\workflows\nuget-publish.yml
 	EndProjectSection
