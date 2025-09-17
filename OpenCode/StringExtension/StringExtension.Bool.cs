@@ -1,4 +1,4 @@
-﻿
+
 namespace OpenCode
 {
     public static partial class StringExtension
