@@ -31,7 +31,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Run Tests
-      run: dotnet test --configuration Release --no-build --verbosity normal --no-parallel
+      run: dotnet test --configuration Release --no-build --verbosity normal -maxcpucount:1
 
     - name: Pack
       run: dotnet pack --configuration Release --no-build --output ./nupkg
