@@ -25,13 +25,13 @@ jobs:
         dotnet-version: ${{ matrix.dotnet-version }}
         include-runtime: true
 
-    - name: Install .NET runtime (for tests)
-      run: |
-        if [[ "${{ matrix.dotnet-version }}" == "6.x" ]]; then
-          sudo apt-get update && sudo apt-get install -y dotnet-runtime-6.0
-        elif [[ "${{ matrix.dotnet-version }}" == "7.x" ]]; then
-          sudo apt-get update && sudo apt-get install -y dotnet-runtime-7.0
-        fi
+    # - name: Install .NET runtime (for tests)
+    #   run: |
+    #     if [[ "${{ matrix.dotnet-version }}" == "6.x" ]]; then
+    #       sudo apt-get update && sudo apt-get install -y dotnet-runtime-6.0
+    #     elif [[ "${{ matrix.dotnet-version }}" == "7.x" ]]; then
+    #       sudo apt-get update && sudo apt-get install -y dotnet-runtime-7.0
+    #     fi
 
     - name: Restore dependencies
       run: dotnet restore
