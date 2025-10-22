@@ -39,12 +39,14 @@ jobs:
       run: dotnet pack --configuration Release --no-build --output ./nupkg
 
     - name: Nuget Login (OIDC + temp API Key)  
+      if: matrix.dotnet-version == '9.x'
       uses: Nuget/login@v1
       id: login
       with:
         user: ${{secrets.NUGET_USER}}
 
     - name: Nuget push
+      if: matrix.dotnet-version == '9.x'
       run: dotnet nuget push nupkg/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
         
     - name: Done
