@@ -1,43 +1,64 @@
 using Xunit;
 
-namespace OpenCode.Tests
+namespace OpenCode.Tests;
+
+public class StringExtensionDecimalTests
 {
-    public partial class StringExtension
+    #region --- ParseToDecimal ---
+
+    [Theory]
+    [InlineData("123.45", 123.45)]
+    [InlineData("  678.9 ", 678.9)]
+    [InlineData(null, 0)]
+    [InlineData("", 0)]
+    [InlineData("invalid", 0)]
+    public void ParseToDecimal_ReturnsExpected(string? input, decimal expected)
     {
-        #region ParseDecimal
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData("abcd!@#$")]
-        public void ParseToDecimal_ShouldReturnDefault0(string input)
-        {
-            var result = input.ParseToDecimal();
-
-            Assert.Equal(0, result);
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData("abcd!@#$1234")]
-        public void ParseToDecimal_ShouldReturnDefault5(string input)
-        {
-            var result = input.ParseToDecimal(5);
-
-            Assert.Equal(5, result);
-        }
-
-        [Theory]
-        [InlineData("1")]
-        [InlineData("1.0")]
-        [InlineData("01.0")]
-        public void ParseToDecimal_ShouldParseInput(string input)
-        {
-            var result = input.ParseToDecimal(5);
-
-            Assert.Equal(decimal.Parse(input), result);
-        }
-
-        #endregion
+        var result = input.ParseToDecimal();
+        Assert.Equal(expected, result);
     }
+
+    [Fact]
+    public void ParseToDecimal_UsesCustomDefaultValue()
+    {
+        string? input = "invalid";
+        decimal defaultValue = 99.99m;
+        var result = input.ParseToDecimal(defaultValue);
+        Assert.Equal(defaultValue, result);
+    }
+
+    #endregion
+
+    #region --- RemoveTrailingZero ---
+
+    [Theory]
+    [InlineData("2.500", "2.5")]
+    [InlineData("123.0000", "123")]
+    [InlineData("0.000", "0")]
+    [InlineData("45.678900", "45.6789")]
+    [InlineData(null, "")]
+    [InlineData("invalid", "invalid")]
+    public void RemoveTrailingZero_ReturnsExpected(string? input, string? expected)
+    {
+        var result = input.RemoveTrailingZero();
+        Assert.Equal(expected, result);
+    }
+
+    #endregion
+
+    #region --- IsDecimal ---
+
+    [Theory]
+    [InlineData("123.45", true)]
+    [InlineData("0", true)]
+    [InlineData("-987.65", true)]
+    [InlineData("invalid", false)]
+    [InlineData(null, false)]
+    [InlineData("", false)]
+    public void IsDecimal_ReturnsExpected(string? input, bool expected)
+    {
+        Assert.Equal(expected, input.IsDecimal());
+    }
+
+    #endregion
 }
