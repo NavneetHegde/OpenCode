@@ -4,7 +4,7 @@
 		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 
 		<!-- NuGet package metadata -->
-		<Version>3.2.0</Version>
+		<Version>3.3.0</Version>
 		<PackageId>OpenCode</PackageId>
 		<Authors>Navneet Hegde</Authors>
 		<Company>Navneet Hegde</Company>
@@ -24,9 +24,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- README and LICENSE at solution root -->
+		<!-- README, LICENSE, and icon from solution root -->
 		<None Include="..\README.md" Pack="true" PackagePath="\" />
 		<None Include="..\LICENSE" Pack="true" PackagePath="\" />
+		<None Include="..\Icon.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 </Project>
