@@ -9,7 +9,7 @@ on:
 
 jobs: 
    build-and-publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # or ubuntu-latest if using include-runtime
     permissions:
       id-token: write # enable GitHub OIDC token issuance for this job
     strategy:
@@ -23,6 +23,7 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
+        include-runtime: true
 
     - name: Install .NET runtime (for tests)
       run: |
