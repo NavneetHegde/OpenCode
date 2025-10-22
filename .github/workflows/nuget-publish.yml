@@ -9,7 +9,7 @@ on:
 
 jobs: 
   build-and-test:
-    runs-on: ubuntu-22.04  # or ubuntu-latest if using include-runtime
+    runs-on: ubuntu-latest  # or ubuntu-latest if using include-runtime
     permissions:
       id-token: write # enable GitHub OIDC token issuance for this job
     strategy:
@@ -23,7 +23,6 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
-        include-runtime: true
 
     - name: Restore dependencies
       run: dotnet restore
