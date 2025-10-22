@@ -14,7 +14,7 @@ jobs:
       id-token: write # enable GitHub OIDC token issuance for this job
     strategy:
       matrix:
-        dotnet-version: [6.0.x, 7.0.x, 8.0.x, 9.0.x] # test all supported versions
+        dotnet-version: [6.x, 7.x, 8.x, 9.x] # test all supported versions
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -36,14 +36,14 @@ jobs:
     - name: Pack
       run: dotnet pack --configuration Release --no-build --output ./nupkg
 
-    - name: Nuget Login (OIDC + temp API Key)  
-      uses: Nuget/login@v1
-      id: login
-      with:
-        user: ${{secrets.NUGET_USER}}
+    # - name: Nuget Login (OIDC + temp API Key)  
+    #   uses: Nuget/login@v1
+    #   id: login
+    #   with:
+    #     user: ${{secrets.NUGET_USER}}
 
-    - name: Nuget push
-      run: dotnet nuget push nupkg/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+    # - name: Nuget push
+    #   run: dotnet nuget push nupkg/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
         
   
  
