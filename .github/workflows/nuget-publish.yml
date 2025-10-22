@@ -8,7 +8,7 @@ on:
       - 'v*'
 
 jobs: 
-   build-and-publish:
+  build-and-test:
     runs-on: ubuntu-22.04  # or ubuntu-latest if using include-runtime
     permissions:
       id-token: write # enable GitHub OIDC token issuance for this job
@@ -37,14 +37,31 @@ jobs:
     - name: Pack
       run: dotnet pack --configuration Release --no-build --output ./nupkg
 
-    - name: Nuget Login (OIDC + temp API Key)  
-      uses: Nuget/login@v1
-      id: login
+      # Upload artifact for later publishing
+    - name: Upload NuGet package
+      uses: actions/upload-artifact@v3
       with:
-        user: ${{secrets.NUGET_USER}}
+        name: nupkg
+        path: ./nupkg/*.nupkg
 
-    - name: Nuget push
-      run: dotnet nuget push nupkg/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+  publish:
+    needs: build-and-test
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Download NuGet package
+        uses: actions/download-artifact@v3
+        with:
+          name: nupkg
+          path: ./nupkg
+
+      - name: Nuget Login (OIDC + temp API Key)  
+        uses: Nuget/login@v1
+        id: login
+        with:
+          user: ${{secrets.NUGET_USER}}
+
+      - name: Nuget push
+        run: dotnet nuget push nupkg/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
         
   
  

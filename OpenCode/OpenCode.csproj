@@ -4,14 +4,23 @@
 		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 
 		<!-- NuGet package metadata -->
-		<Version>3.1.0</Version>
+		<Version>3.2.0</Version>
 		<PackageId>OpenCode</PackageId>
 		<Authors>Navneet Hegde</Authors>
 		<Company>Navneet Hegde</Company>
 		<Nullable>enable</Nullable>
-		<Description>OpenCode is a .NET 9 library providing useful string extension methods for common operations such as formatting, parsing, and hashing.</Description>
+		<Description>OpenCode is a lightweight .NET library offering handy extension methods for strings, numbers, booleans, GUIDs, and dates.</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageTags>library, extensions, string-extensions, helpers, dotnet, csharp</PackageTags>
+
+		<!-- Licensing and Metadata -->
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/NavneetHegde/OpenCode</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/NavneetHegde/OpenCode</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageIcon>Icon.png</PackageIcon>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<Copyright>© 2025 Navneet Hegde</Copyright>
 	</PropertyGroup>
 
 	<ItemGroup>
