@@ -14,15 +14,25 @@ jobs:
       id-token: write # enable GitHub OIDC token issuance for this job
     strategy:
       matrix:
-        dotnet-version: [8.x, 9.x] # test all supported versions
+        dotnet-version: [6.x, 7.x, 8.x, 9.x] # test all supported versions
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup .NET
+    - name: Setup .NET SDK and runtime
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
+        include-prerelease: true
+        cache: true
+
+    - name: Install .NET runtime (for tests)
+      run: |
+        if [[ "${{ matrix.dotnet-version }}" == "6.x" ]]; then
+          sudo apt-get update && sudo apt-get install -y dotnet-runtime-6.0
+        elif [[ "${{ matrix.dotnet-version }}" == "7.x" ]]; then
+          sudo apt-get update && sudo apt-get install -y dotnet-runtime-7.0
+        fi
 
     - name: Restore dependencies
       run: dotnet restore
