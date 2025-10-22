@@ -9,7 +9,7 @@ on:
 
 jobs: 
   build-and-test:
-    runs-on: ubuntu-latest  # or ubuntu-latest if using include-runtime
+    runs-on: ubuntu-22.04  # or ubuntu-latest if using include-runtime
     permissions:
       id-token: write # enable GitHub OIDC token issuance for this job
     strategy:
