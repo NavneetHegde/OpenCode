@@ -4,7 +4,7 @@
 		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 
 		<!-- NuGet package metadata -->
-		<Version>3.3.0</Version>
+		<Version>3.2.0</Version>
 		<PackageId>OpenCode</PackageId>
 		<Authors>Navneet Hegde</Authors>
 		<Company>Navneet Hegde</Company>
