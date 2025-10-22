@@ -35,10 +35,11 @@ jobs:
       run: dotnet test --configuration Release --no-build --verbosity normal -maxcpucount:1
 
     - name: Pack
+      if: matrix.dotnet-version == '9.x'
       run: dotnet pack --configuration Release --no-build --output ./nupkg
 
-      # Upload artifact for later publishing
     - name: Upload NuGet package
+      if: matrix.dotnet-version == '9.x'
       uses: actions/upload-artifact@v4
       with:
         name: nupkg
