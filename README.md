@@ -1,12 +1,12 @@
 ﻿# OpenCode
 
-**OpenCode** is a lightweight, cross-targeted .NET library providing useful extension methods for strings, numbers, booleans, GUIDs, and dates. It simplifies common tasks such as safe trimming, casing conversions, masking, parsing, numeric formatting, hashing, and more. The library targets **.NET 6 through .NET 9**.
+**OpenCode** is a lightweight, cross-targeted .NET library providing useful extension methods for strings, numbers, booleans, GUIDs, and dates. It simplifies common tasks such as safe trimming, casing conversions, masking, parsing, numeric formatting, hashing, and more. The library targets **.NET 8 through .NET 9**.
 
 ---
 
 ## Supported Targets
 
-- .NET 6, .NET 7, .NET 8, .NET 9
+- .NET 8, .NET 9
 
 ---
 
@@ -74,7 +74,7 @@
 
 ### Prerequisites
 
-- [.NET 6 SDK or later](https://dotnet.microsoft.com/en-us/download/dotnet)  
+- [.NET 8 SDK or later](https://dotnet.microsoft.com/en-us/download/dotnet)  
 - Visual Studio 2022 or later (or any editor/IDE supporting .NET)
 
 ### Installation
