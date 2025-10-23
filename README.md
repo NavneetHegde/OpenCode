@@ -136,5 +136,5 @@ Contributions are welcome! Please submit issues or pull requests via [GitHub](ht
 
 ## License
 
-See [LICENSE](../LICENSE) for details.
+See [LICENSE](LICENSE) for details.
 
