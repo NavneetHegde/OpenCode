@@ -14,7 +14,7 @@ jobs:
       id-token: write # enable GitHub OIDC token issuance for this job
     strategy:
       matrix:
-        dotnet-version: [8.x, 9.x] # test all supported versions
+        dotnet-version: [8.x, 9.x, 10.x] # test all supported versions
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -34,18 +34,18 @@ jobs:
       run: dotnet test --configuration Release --no-build --verbosity normal -maxcpucount:1
 
     - name: Pack
-      if: matrix.dotnet-version == '9.x'
+      if: matrix.dotnet-version == '10.x'
       run: dotnet pack --configuration Release --no-build --output ./nupkg
 
-    - name: Nuget Login (OIDC + temp API Key)  
-      if: matrix.dotnet-version == '9.x'
+    - name: Nuget Login (OIDC + temp API Key)
+      if: matrix.dotnet-version == '10.x'
       uses: Nuget/login@v1
       id: login
       with:
         user: ${{secrets.NUGET_USER}}
 
     - name: Nuget push
-      if: matrix.dotnet-version == '9.x'
+      if: matrix.dotnet-version == '10.x'
       run: dotnet nuget push nupkg/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
         
     - name: Done

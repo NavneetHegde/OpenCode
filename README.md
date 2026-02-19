@@ -1,12 +1,12 @@
 ﻿# OpenCode
 
-**OpenCode** is a lightweight, cross-targeted .NET library providing useful extension methods for strings, numbers, booleans, GUIDs, and dates. It simplifies common tasks such as safe trimming, casing conversions, masking, parsing, numeric formatting, hashing, and more. The library targets **.NET 8 through .NET 9**.
+**OpenCode** is a lightweight, cross-targeted .NET library providing useful extension methods for strings, numbers, booleans, GUIDs, and dates. It simplifies common tasks such as safe trimming, casing conversions, masking, parsing, numeric formatting, hashing, and more. The library targets **.NET 8 through .NET 10**.
 
 ---
 
 ## Supported Targets
 
-- .NET 8, .NET 9
+- .NET 8, .NET 9, .NET 10
 
 ---
 
@@ -19,8 +19,13 @@
 - **`SafeTrim`** — trims input safely; returns empty string if input is `null`.  
 - **`Truncate`** — safely truncates a string to a maximum length.  
 - **`SafeSubstring`** — extracts substring without throwing exceptions for out-of-range indices.  
-- **`EqualsIgnoreCase`** — ordinal case-insensitive comparison.  
-- **`IsNumeric`** — checks if a string can be parsed as a number (decimal).  
+- **`EqualsIgnoreCase`** — ordinal case-insensitive comparison.
+- **`ContainsIgnoreCase`** — case-insensitive contains check.
+- **`IsNumeric`** — checks if a string can be parsed as a number (decimal).
+- **`Reverse`** — reverses a string, handling Unicode surrogate pairs.
+- **`Left`**, **`Right`** — extract leftmost/rightmost N characters safely.
+- **`WordCount`** — counts words by splitting on whitespace.
+- **`EnsureStartsWith`**, **`EnsureEndsWith`** — prepend/append prefix or suffix if missing.
 
 ### Formatting Helpers
 
@@ -43,7 +48,9 @@
 - **`ParseToDecimal`**, **`ParseToInt`**, **`ParseToLong`** — safe parsing with configurable defaults (invariant culture).  
 - **`RemoveTrailingZero`** — removes redundant trailing zeros (uses `G29` to preserve significance).  
 - **`IsDecimal`**, **`IsInteger`** — validate numeric strings.  
-- **`ToOrdinal`** — converts numeric string to English ordinal (e.g., `1` → `1st`).  
+- **`ToOrdinal`** — converts numeric string to English ordinal (e.g., `1` → `1st`).
+- **`IsBetween`** — check if an integer falls within an inclusive range.
+- **`IsPositive`**, **`IsNegative`** — check sign of integer or decimal values.
 
 ### Boolean Helpers
 
@@ -54,19 +61,26 @@
 ### Hashing & Encoding
 
 - **`ToMD5Hash`** — computes MD5 hash (lowercase hex).  
-- **`ToSHA256Hash`** — computes SHA256 hash (Base64).  
+- **`ToSHA256Hash`** — computes SHA256 hash (lowercase hex).
 - **`ToBase64`** / **`FromBase64`** — encode/decode Base64 strings safely.  
 
 ### Guid Helpers
 
 - **`ParseToGuid`**, **`IsGuid`**, **`IsValidGuid`** — parse and validate GUIDs.  
-- **`ToShortGuid`**, **`ToCompactString`** — compact representations of GUIDs.  
+- **`ToShortGuid`**, **`ToCompactString`** — compact representations of GUIDs.
+- **`FromShortGuid`** — decode a short GUID string back to a `Guid`.
 
 ### Date & Time Helpers
 
-- **`ParseToDateTime`**, **`ParseToDateOnly`** — safe parsing with default values.  
-- **`IsDateTime`** — check if string can be parsed to DateTime.  
-- **`ToFormattedDate`** — format parsed DateTime string.  
+- **`ParseToDateTime`**, **`ParseToDateOnly`** — safe parsing with default values.
+- **`IsDateTime`** — check if string can be parsed to DateTime.
+- **`ToFormattedDate`** — format parsed DateTime string.
+- **`IsWeekday`** — check if a date is Monday through Friday.
+- **`IsBetween`** — check if a date falls within an inclusive range.
+- **`ToUnixTimestamp`** — convert DateTime to Unix epoch seconds.
+- **`StartOfMonth`**, **`EndOfMonth`** — get first/last moment of the month.
+- **`StartOfWeek`** — get the start of the week (configurable start day).
+- **`DaysInMonth`** — get the number of days in the date's month.
 
 ---
 

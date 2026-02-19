@@ -36,5 +36,19 @@ public static class DecimalExtension
     /// Converts decimal to currency string (e.g., "$12.34").
     /// </summary>
     public static string ToCurrency(this decimal value, CultureInfo? culture = null)
-        => string.Format(culture ?? CultureInfo.CurrentCulture, "{0:C}", value);
+        => string.Format(culture ?? CultureInfo.InvariantCulture, "{0:C}", value);
+
+    /// <summary>
+    /// Determines whether the specified decimal value is strictly greater than zero.
+    /// </summary>
+    /// <param name="value">The decimal to evaluate.</param>
+    /// <returns><c>true</c> if <paramref name="value"/> is greater than zero; otherwise <c>false</c>.</returns>
+    public static bool IsPositive(this decimal value) => value > 0m;
+
+    /// <summary>
+    /// Determines whether the specified decimal value is strictly less than zero.
+    /// </summary>
+    /// <param name="value">The decimal to evaluate.</param>
+    /// <returns><c>true</c> if <paramref name="value"/> is less than zero; otherwise <c>false</c>.</returns>
+    public static bool IsNegative(this decimal value) => value < 0m;
 }

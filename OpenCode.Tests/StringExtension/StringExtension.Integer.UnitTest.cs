@@ -62,6 +62,7 @@ public class StringExtensionIntegerTests
     [InlineData("abc", false)]
     [InlineData(null, false)]
     [InlineData("", false)]
+    [InlineData("  123  ", true)]
     public void IsInteger_ReturnsExpected(string? input, bool expected)
     {
         Assert.Equal(expected, input.IsInteger());

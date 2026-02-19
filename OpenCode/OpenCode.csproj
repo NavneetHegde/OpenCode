@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
 
 		<!-- NuGet package metadata -->
-		<Version>3.2.0</Version>
+		<Version>4.0.0</Version>
 		<PackageId>OpenCode</PackageId>
 		<Authors>Navneet Hegde</Authors>
 		<Company>Navneet Hegde</Company>

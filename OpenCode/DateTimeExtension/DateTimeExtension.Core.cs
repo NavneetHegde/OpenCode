@@ -102,4 +102,71 @@ public static class DateTimeExtension
         if (birthDate.Date > today.AddYears(-age)) age--;
         return age;
     }
+
+    /// <summary>
+    /// Determines whether the specified <see cref="DateTime"/> falls on a weekday (Monday through Friday).
+    /// </summary>
+    /// <param name="date">The date to evaluate.</param>
+    /// <returns><c>true</c> if <paramref name="date"/> is Monday through Friday; otherwise <c>false</c>.</returns>
+    public static bool IsWeekday(this DateTime date)
+        => !date.IsWeekend();
+
+    /// <summary>
+    /// Determines whether the specified <see cref="DateTime"/> falls within the inclusive range [start, end].
+    /// </summary>
+    /// <param name="date">The date to evaluate.</param>
+    /// <param name="start">The start of the range (inclusive).</param>
+    /// <param name="end">The end of the range (inclusive).</param>
+    /// <returns><c>true</c> if <paramref name="date"/> is between <paramref name="start"/> and <paramref name="end"/> inclusive; otherwise <c>false</c>.</returns>
+    public static bool IsBetween(this DateTime date, DateTime start, DateTime end)
+        => date >= start && date <= end;
+
+    /// <summary>
+    /// Converts the specified <see cref="DateTime"/> to a Unix timestamp (seconds since 1970-01-01 UTC).
+    /// </summary>
+    /// <param name="date">The date to convert.</param>
+    /// <returns>The number of seconds elapsed since the Unix epoch.</returns>
+    public static long ToUnixTimestamp(this DateTime date)
+    {
+        var dto = date.Kind == DateTimeKind.Unspecified
+            ? new DateTimeOffset(DateTime.SpecifyKind(date, DateTimeKind.Utc))
+            : new DateTimeOffset(date);
+        return dto.ToUnixTimeSeconds();
+    }
+
+    /// <summary>
+    /// Returns the first day of the month at midnight for the specified <see cref="DateTime"/>.
+    /// </summary>
+    /// <param name="date">The date for which to obtain the start of month.</param>
+    /// <returns>A <see cref="DateTime"/> representing the first day of the month at 00:00:00.</returns>
+    public static DateTime StartOfMonth(this DateTime date)
+        => new(date.Year, date.Month, 1);
+
+    /// <summary>
+    /// Returns the last day of the month at 23:59:59.999 for the specified <see cref="DateTime"/>.
+    /// </summary>
+    /// <param name="date">The date for which to obtain the end of month.</param>
+    /// <returns>A <see cref="DateTime"/> representing the last day of the month at end of day.</returns>
+    public static DateTime EndOfMonth(this DateTime date)
+        => new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 23, 59, 59, 999);
+
+    /// <summary>
+    /// Returns the start of the week (midnight) for the specified <see cref="DateTime"/>.
+    /// </summary>
+    /// <param name="date">The date for which to obtain the start of week.</param>
+    /// <param name="startOfWeek">The day considered the start of the week. Defaults to <see cref="DayOfWeek.Monday"/>.</param>
+    /// <returns>A <see cref="DateTime"/> representing the start of the week at midnight.</returns>
+    public static DateTime StartOfWeek(this DateTime date, DayOfWeek startOfWeek = DayOfWeek.Monday)
+    {
+        int diff = ((int)date.DayOfWeek - (int)startOfWeek + 7) % 7;
+        return date.AddDays(-diff).Date;
+    }
+
+    /// <summary>
+    /// Returns the number of days in the month for the specified <see cref="DateTime"/>.
+    /// </summary>
+    /// <param name="date">The date whose month to query.</param>
+    /// <returns>The number of days in the month (28–31).</returns>
+    public static int DaysInMonth(this DateTime date)
+        => DateTime.DaysInMonth(date.Year, date.Month);
 }

@@ -63,4 +63,35 @@ public class IntegerExtensionTests
     {
         Assert.Equal(expected, value.Abs());
     }
+
+    [Theory]
+    [InlineData(5, 1, 10, true)]
+    [InlineData(1, 1, 10, true)]
+    [InlineData(10, 1, 10, true)]
+    [InlineData(0, 1, 10, false)]
+    [InlineData(11, 1, 10, false)]
+    public void IsBetween_ReturnsExpected(int value, int min, int max, bool expected)
+    {
+        Assert.Equal(expected, value.IsBetween(min, max));
+    }
+
+    [Theory]
+    [InlineData(1, true)]
+    [InlineData(100, true)]
+    [InlineData(0, false)]
+    [InlineData(-1, false)]
+    public void IsPositive_ReturnsExpected(int value, bool expected)
+    {
+        Assert.Equal(expected, value.IsPositive());
+    }
+
+    [Theory]
+    [InlineData(-1, true)]
+    [InlineData(-100, true)]
+    [InlineData(0, false)]
+    [InlineData(1, false)]
+    public void IsNegative_ReturnsExpected(int value, bool expected)
+    {
+        Assert.Equal(expected, value.IsNegative());
+    }
 }

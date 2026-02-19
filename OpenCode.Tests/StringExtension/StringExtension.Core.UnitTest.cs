@@ -174,8 +174,6 @@ public partial class StringExtensionTests
     [InlineData(null, false)]
     public void IsEmail_ReturnsExpected(string? input, bool expected)
     {
-        if (input is null)
-            input = string.Empty;
         Assert.Equal(expected, input.IsEmail());
     }
 
@@ -187,9 +185,81 @@ public partial class StringExtensionTests
     [InlineData(null, false)]
     public void IsJson_ReturnsExpected(string? input, bool expected)
     {
-        if (input is null)
-            input = string.Empty;
         Assert.Equal(expected, input.IsJson());
+    }
+
+    [Theory]
+    [InlineData("abc", "cba")]
+    [InlineData("hello", "olleh")]
+    [InlineData("a", "a")]
+    [InlineData("", "")]
+    [InlineData(null, "")]
+    public void Reverse_ReturnsExpected(string? input, string expected)
+    {
+        Assert.Equal(expected, input.Reverse());
+    }
+
+    [Theory]
+    [InlineData("Hello World", "world", true)]
+    [InlineData("Hello World", "HELLO", true)]
+    [InlineData("Hello World", "xyz", false)]
+    [InlineData(null, "test", false)]
+    [InlineData("test", null, false)]
+    public void ContainsIgnoreCase_ReturnsExpected(string? input, string? value, bool expected)
+    {
+        Assert.Equal(expected, input.ContainsIgnoreCase(value));
+    }
+
+    [Theory]
+    [InlineData("abcdef", 3, "abc")]
+    [InlineData("ab", 5, "ab")]
+    [InlineData(null, 3, "")]
+    [InlineData("abc", 0, "")]
+    public void Left_ReturnsExpected(string? input, int length, string expected)
+    {
+        Assert.Equal(expected, input.Left(length));
+    }
+
+    [Theory]
+    [InlineData("abcdef", 3, "def")]
+    [InlineData("ab", 5, "ab")]
+    [InlineData(null, 3, "")]
+    [InlineData("abc", 0, "")]
+    public void Right_ReturnsExpected(string? input, int length, string expected)
+    {
+        Assert.Equal(expected, input.Right(length));
+    }
+
+    [Theory]
+    [InlineData("hello world", 2)]
+    [InlineData("one", 1)]
+    [InlineData("  multiple   spaces  here  ", 3)]
+    [InlineData(null, 0)]
+    [InlineData("", 0)]
+    [InlineData("   ", 0)]
+    public void WordCount_ReturnsExpected(string? input, int expected)
+    {
+        Assert.Equal(expected, input.WordCount());
+    }
+
+    [Theory]
+    [InlineData("world", "/", "/world")]
+    [InlineData("/world", "/", "/world")]
+    [InlineData(null, "/", "/")]
+    [InlineData("", "/", "/")]
+    public void EnsureStartsWith_ReturnsExpected(string? input, string prefix, string expected)
+    {
+        Assert.Equal(expected, input.EnsureStartsWith(prefix));
+    }
+
+    [Theory]
+    [InlineData("hello", "/", "hello/")]
+    [InlineData("hello/", "/", "hello/")]
+    [InlineData(null, "/", "/")]
+    [InlineData("", "/", "/")]
+    public void EnsureEndsWith_ReturnsExpected(string? input, string suffix, string expected)
+    {
+        Assert.Equal(expected, input.EnsureEndsWith(suffix));
     }
 
     #endregion

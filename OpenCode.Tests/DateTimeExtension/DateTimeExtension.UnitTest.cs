@@ -70,4 +70,103 @@ public class DateTimeExtensionTests
         var result = birthDate.ToAge();
         Assert.Equal(expectedAge, result);
     }
+
+    [Theory]
+    [InlineData(DayOfWeek.Monday, true)]
+    [InlineData(DayOfWeek.Friday, true)]
+    [InlineData(DayOfWeek.Saturday, false)]
+    [InlineData(DayOfWeek.Sunday, false)]
+    public void IsWeekday_ReturnsCorrectResult(DayOfWeek dayOfWeek, bool expected)
+    {
+        var date = new DateTime(2025, 10, 20).AddDays((int)dayOfWeek - (int)DayOfWeek.Monday);
+        Assert.Equal(expected, date.IsWeekday());
+    }
+
+    [Fact]
+    public void IsBetween_WithinRange_ReturnsTrue()
+    {
+        var date = new DateTime(2025, 6, 15);
+        var start = new DateTime(2025, 1, 1);
+        var end = new DateTime(2025, 12, 31);
+        Assert.True(date.IsBetween(start, end));
+    }
+
+    [Fact]
+    public void IsBetween_OutsideRange_ReturnsFalse()
+    {
+        var date = new DateTime(2026, 1, 1);
+        var start = new DateTime(2025, 1, 1);
+        var end = new DateTime(2025, 12, 31);
+        Assert.False(date.IsBetween(start, end));
+    }
+
+    [Fact]
+    public void IsBetween_OnBoundary_ReturnsTrue()
+    {
+        var start = new DateTime(2025, 1, 1);
+        Assert.True(start.IsBetween(start, new DateTime(2025, 12, 31)));
+    }
+
+    [Fact]
+    public void ToUnixTimestamp_ReturnsExpected()
+    {
+        var date = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var result = date.ToUnixTimestamp();
+        Assert.Equal(1735689600, result);
+    }
+
+    [Fact]
+    public void StartOfMonth_ReturnsFirstDay()
+    {
+        var date = new DateTime(2025, 10, 21, 15, 30, 45);
+        var result = date.StartOfMonth();
+        Assert.Equal(new DateTime(2025, 10, 1), result);
+    }
+
+    [Fact]
+    public void EndOfMonth_ReturnsLastDay()
+    {
+        var date = new DateTime(2025, 10, 15);
+        var result = date.EndOfMonth();
+        Assert.Equal(new DateTime(2025, 10, 31, 23, 59, 59, 999), result);
+    }
+
+    [Fact]
+    public void EndOfMonth_February_LeapYear()
+    {
+        var date = new DateTime(2024, 2, 10);
+        var result = date.EndOfMonth();
+        Assert.Equal(29, result.Day);
+    }
+
+    [Fact]
+    public void StartOfWeek_Monday_ReturnsMonday()
+    {
+        // 2025-10-23 is a Thursday
+        var date = new DateTime(2025, 10, 23);
+        var result = date.StartOfWeek(DayOfWeek.Monday);
+        Assert.Equal(new DateTime(2025, 10, 20), result);
+        Assert.Equal(DayOfWeek.Monday, result.DayOfWeek);
+    }
+
+    [Fact]
+    public void StartOfWeek_Sunday_ReturnsSunday()
+    {
+        // 2025-10-23 is a Thursday
+        var date = new DateTime(2025, 10, 23);
+        var result = date.StartOfWeek(DayOfWeek.Sunday);
+        Assert.Equal(new DateTime(2025, 10, 19), result);
+        Assert.Equal(DayOfWeek.Sunday, result.DayOfWeek);
+    }
+
+    [Theory]
+    [InlineData(2025, 2, 28)]
+    [InlineData(2024, 2, 29)]
+    [InlineData(2025, 1, 31)]
+    [InlineData(2025, 4, 30)]
+    public void DaysInMonth_ReturnsExpected(int year, int month, int expected)
+    {
+        var date = new DateTime(year, month, 1);
+        Assert.Equal(expected, date.DaysInMonth());
+    }
 }
