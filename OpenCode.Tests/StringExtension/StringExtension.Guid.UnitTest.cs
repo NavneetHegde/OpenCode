@@ -92,4 +92,31 @@ public partial class StringExtensionTests
     }
 
     #endregion
+
+    #region --- FromShortGuid ---
+
+    [Fact]
+    public void FromShortGuid_RoundTrips()
+    {
+        var original = Guid.NewGuid();
+        var shortGuid = original.ToShortGuid();
+        var result = shortGuid.FromShortGuid();
+        Assert.Equal(original, result);
+    }
+
+    [Fact]
+    public void FromShortGuid_InvalidInput_ReturnsDefault()
+    {
+        Assert.Equal(Guid.Empty, "invalid".FromShortGuid());
+    }
+
+    [Fact]
+    public void FromShortGuid_Null_ReturnsDefault()
+    {
+        string? input = null;
+        var fallback = Guid.NewGuid();
+        Assert.Equal(fallback, input.FromShortGuid(fallback));
+    }
+
+    #endregion
 }

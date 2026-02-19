@@ -38,18 +38,25 @@ public static partial class StringExtension
     }
 
     /// <summary>
-    /// Computes the SHA-256 hash of the provided string and returns it as a Base64-encoded string.
+    /// Computes the SHA-256 hash of the provided string and returns a lowercase hexadecimal representation.
     /// </summary>
-    /// <param name="input">The input string to hash. If <c>null</c> or whitespace, an empty string is returned.</param>
-    /// <returns>Base64 encoded SHA-256 hash, or empty string when input is null or whitespace.</returns>
+    /// <param name="input">The input string to hash. If <c>null</c> or empty, an empty string is returned.</param>
+    /// <returns>Lowercase hexadecimal string of the SHA-256 hash, or empty string when input is null or empty.</returns>
     public static string ToSHA256Hash(this string? input)
     {
-        if (string.IsNullOrWhiteSpace(input))
+        if (string.IsNullOrEmpty(input))
             return string.Empty;
 
-        var bytes = Encoding.UTF8.GetBytes(input);
-        var hash = SHA256.HashData(bytes);
-        return Convert.ToBase64String(hash);
+        var hash = SHA256.HashData(Encoding.UTF8.GetBytes(input));
+
+#if NET8_0_OR_GREATER
+        return Convert.ToHexString(hash).ToLowerInvariant();
+#else
+        var sb = new StringBuilder(hash.Length * 2);
+        foreach (var b in hash)
+            sb.Append(b.ToString("x2"));
+        return sb.ToString();
+#endif
     }
 
     /// <summary>
@@ -81,7 +88,7 @@ public static partial class StringExtension
             var bytes = Convert.FromBase64String(input);
             return Encoding.UTF8.GetString(bytes);
         }
-        catch
+        catch (FormatException)
         {
             // If input is not valid Base64, return it unchanged
             return input;

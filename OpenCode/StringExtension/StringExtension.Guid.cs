@@ -63,4 +63,27 @@ public static partial class StringExtension
     /// </example>
     public static bool IsValidGuid(this string? input)
     => Guid.TryParse(input, out var g) && g != Guid.Empty;
+
+    /// <summary>
+    /// Decodes a 22-character URL-safe Base64 string (produced by <see cref="GuidExtension.ToShortGuid"/>) back to a <see cref="Guid"/>.
+    /// </summary>
+    /// <param name="input">The short GUID string to decode. Must be exactly 22 characters.</param>
+    /// <param name="defaultValue">The value to return when decoding fails. Defaults to <see cref="Guid.Empty"/>.</param>
+    /// <returns>The decoded <see cref="Guid"/>, or <paramref name="defaultValue"/> when input is invalid.</returns>
+    public static Guid FromShortGuid(this string? input, Guid defaultValue = default)
+    {
+        if (string.IsNullOrEmpty(input) || input.Length != 22)
+            return defaultValue;
+
+        try
+        {
+            var base64 = input.Replace("_", "/").Replace("-", "+") + "==";
+            var bytes = Convert.FromBase64String(base64);
+            return new Guid(bytes);
+        }
+        catch (FormatException)
+        {
+            return defaultValue;
+        }
+    }
 }

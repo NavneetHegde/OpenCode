@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -136,9 +137,13 @@ private static partial Regex CamelCaseRegex();
 
 [GeneratedRegex(@"[\s\-]+")]
 private static partial Regex SpaceOrDashRegex();
+
+[GeneratedRegex(@"[\s_]+")]
+private static partial Regex SpaceOrUnderscoreRegex();
 #else
     private static readonly Regex CamelCaseRegex = new(@"([a-z0-9])([A-Z])", RegexOptions.Compiled);
     private static readonly Regex SpaceOrDashRegex = new(@"[\s\-]+", RegexOptions.Compiled);
+    private static readonly Regex SpaceOrUnderscoreRegex = new(@"[\s_]+", RegexOptions.Compiled);
 #endif
 
     /// <summary>
@@ -171,8 +176,14 @@ private static partial Regex SpaceOrDashRegex();
     public static string ToKebabCase(this string? input)
     {
         if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-        var result = Regex.Replace(input, @"([a-z0-9])([A-Z])", "$1-$2");
-        result = Regex.Replace(result, @"[\s_]+", "-");
+
+#if NET7_0_OR_GREATER
+        var result = CamelCaseRegex().Replace(input, "$1-$2");
+        result = SpaceOrUnderscoreRegex().Replace(result, "-");
+#else
+        var result = CamelCaseRegex.Replace(input, "$1-$2");
+        result = SpaceOrUnderscoreRegex.Replace(result, "-");
+#endif
         return result.ToLowerInvariant();
     }
 
@@ -288,7 +299,7 @@ private static partial Regex SpaceOrDashRegex();
     /// </summary>
     /// <param name="input">The input string to validate as email.</param>
     /// <returns>True if the input matches a basic email pattern; false otherwise. Null input is treated as empty string.</returns>
-    public static bool IsEmail(this string input)
+    public static bool IsEmail(this string? input)
     {
         return System.Text.RegularExpressions.Regex.IsMatch(
                 input ?? "",
@@ -301,7 +312,7 @@ private static partial Regex SpaceOrDashRegex();
     /// </summary>
     /// <param name="input">The input string to check.</param>
     /// <returns>True if input is a non-empty trimmed string that starts with '{' and ends with '}' or starts with '[' and ends with ']'. Otherwise false.</returns>
-    public static bool IsJson(this string input)
+    public static bool IsJson(this string? input)
     {
         if (string.IsNullOrWhiteSpace(input))
             return false;
@@ -309,6 +320,95 @@ private static partial Regex SpaceOrDashRegex();
         input = input.Trim();
         return (input.StartsWith('{') && input.EndsWith('}')) ||
                (input.StartsWith('[') && input.EndsWith(']'));
+    }
+
+    /// <summary>
+    /// Reverses the characters in the string, correctly handling Unicode surrogate pairs.
+    /// </summary>
+    /// <param name="input">The input string to reverse.</param>
+    /// <returns>Reversed string. Returns empty string when input is null or empty.</returns>
+    public static string Reverse(this string? input)
+    {
+        if (string.IsNullOrEmpty(input)) return string.Empty;
+        var elements = System.Globalization.StringInfo.GetTextElementEnumerator(input);
+        var result = new List<string>();
+        while (elements.MoveNext())
+            result.Add(elements.GetTextElement());
+        result.Reverse();
+        return string.Concat(result);
+    }
+
+    /// <summary>
+    /// Determines whether the string contains the specified value using case-insensitive comparison.
+    /// </summary>
+    /// <param name="input">The input string to search within.</param>
+    /// <param name="value">The value to search for.</param>
+    /// <returns>True if <paramref name="input"/> contains <paramref name="value"/> using ordinal case-insensitive comparison; otherwise false.</returns>
+    public static bool ContainsIgnoreCase(this string? input, string? value)
+    {
+        if (input is null || value is null) return false;
+        return input.Contains(value, StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Returns the leftmost N characters of the string.
+    /// </summary>
+    /// <param name="input">The input string.</param>
+    /// <param name="length">Number of characters to return from the start.</param>
+    /// <returns>The first <paramref name="length"/> characters, or the full string if shorter. Returns empty string when input is null or empty.</returns>
+    public static string Left(this string? input, int length)
+    {
+        if (string.IsNullOrEmpty(input) || length <= 0) return string.Empty;
+        return length >= input.Length ? input : input[..length];
+    }
+
+    /// <summary>
+    /// Returns the rightmost N characters of the string.
+    /// </summary>
+    /// <param name="input">The input string.</param>
+    /// <param name="length">Number of characters to return from the end.</param>
+    /// <returns>The last <paramref name="length"/> characters, or the full string if shorter. Returns empty string when input is null or empty.</returns>
+    public static string Right(this string? input, int length)
+    {
+        if (string.IsNullOrEmpty(input) || length <= 0) return string.Empty;
+        return length >= input.Length ? input : input[^length..];
+    }
+
+    /// <summary>
+    /// Counts the number of words in the string by splitting on whitespace.
+    /// </summary>
+    /// <param name="input">The input string.</param>
+    /// <returns>Number of words. Returns 0 for null, empty, or whitespace-only input.</returns>
+    public static int WordCount(this string? input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return 0;
+        return input.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Length;
+    }
+
+    /// <summary>
+    /// Ensures the string starts with the specified prefix. Prepends it if missing.
+    /// </summary>
+    /// <param name="input">The input string.</param>
+    /// <param name="prefix">The prefix to ensure.</param>
+    /// <param name="comparison">The string comparison type. Defaults to <see cref="StringComparison.Ordinal"/>.</param>
+    /// <returns>The string guaranteed to start with <paramref name="prefix"/>. Returns <paramref name="prefix"/> when input is null or empty.</returns>
+    public static string EnsureStartsWith(this string? input, string prefix, StringComparison comparison = StringComparison.Ordinal)
+    {
+        if (string.IsNullOrEmpty(input)) return prefix;
+        return input.StartsWith(prefix, comparison) ? input : prefix + input;
+    }
+
+    /// <summary>
+    /// Ensures the string ends with the specified suffix. Appends it if missing.
+    /// </summary>
+    /// <param name="input">The input string.</param>
+    /// <param name="suffix">The suffix to ensure.</param>
+    /// <param name="comparison">The string comparison type. Defaults to <see cref="StringComparison.Ordinal"/>.</param>
+    /// <returns>The string guaranteed to end with <paramref name="suffix"/>. Returns <paramref name="suffix"/> when input is null or empty.</returns>
+    public static string EnsureEndsWith(this string? input, string suffix, StringComparison comparison = StringComparison.Ordinal)
+    {
+        if (string.IsNullOrEmpty(input)) return suffix;
+        return input.EndsWith(suffix, comparison) ? input : input + suffix;
     }
 
     #endregion

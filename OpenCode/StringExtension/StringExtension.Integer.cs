@@ -57,11 +57,10 @@ public static partial class StringExtension
     /// <see cref="NumberStyles.Integer"/> and <see cref="CultureInfo.InvariantCulture"/>; otherwise <c>false</c>.
     /// </returns>
     /// <remarks>
-    /// This method does not trim the input. If you expect surrounding whitespace, call
-    /// <c>input?.Trim()</c> before invoking or use <see cref="ParseToInt"/> for safe parsing with trimming.
+    /// The method trims the input before attempting to parse, consistent with <see cref="ParseToInt"/>.
     /// </remarks>
     public static bool IsInteger(this string? input)
-    => int.TryParse(input, NumberStyles.Integer, CultureInfo.InvariantCulture, out _);
+    => int.TryParse(input?.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out _);
 
     /// <summary>
     /// Converts a numeric string to its ordinal representation (for example, "1" -> "1st").

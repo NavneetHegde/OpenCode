@@ -83,4 +83,28 @@ public static class IntegerExtension
     /// <param name="value">The integer whose absolute value is to be returned.</param>
     /// <returns>The absolute value of <paramref name="value"/>.</returns>
     public static int Abs(this int value) => Math.Abs(value);
+
+    /// <summary>
+    /// Determines whether the specified value falls within the inclusive range [min, max].
+    /// </summary>
+    /// <param name="value">The integer to evaluate.</param>
+    /// <param name="min">The inclusive minimum value.</param>
+    /// <param name="max">The inclusive maximum value.</param>
+    /// <returns><c>true</c> if <paramref name="value"/> is between <paramref name="min"/> and <paramref name="max"/> inclusive; otherwise <c>false</c>.</returns>
+    public static bool IsBetween(this int value, int min, int max)
+        => value >= min && value <= max;
+
+    /// <summary>
+    /// Determines whether the specified value is strictly greater than zero.
+    /// </summary>
+    /// <param name="value">The integer to evaluate.</param>
+    /// <returns><c>true</c> if <paramref name="value"/> is greater than zero; otherwise <c>false</c>.</returns>
+    public static bool IsPositive(this int value) => value > 0;
+
+    /// <summary>
+    /// Determines whether the specified value is strictly less than zero.
+    /// </summary>
+    /// <param name="value">The integer to evaluate.</param>
+    /// <returns><c>true</c> if <paramref name="value"/> is less than zero; otherwise <c>false</c>.</returns>
+    public static bool IsNegative(this int value) => value < 0;
 }

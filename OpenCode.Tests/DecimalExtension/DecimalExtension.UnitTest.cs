@@ -55,4 +55,24 @@ public class DecimalExtensionTests
         var result = value.ToCurrency(culture);
         Assert.Equal(expected, result);
     }
+
+    [Theory]
+    [InlineData(1.5, true)]
+    [InlineData(0.001, true)]
+    [InlineData(0, false)]
+    [InlineData(-1.5, false)]
+    public void IsPositive_ReturnsExpected(decimal value, bool expected)
+    {
+        Assert.Equal(expected, value.IsPositive());
+    }
+
+    [Theory]
+    [InlineData(-1.5, true)]
+    [InlineData(-0.001, true)]
+    [InlineData(0, false)]
+    [InlineData(1.5, false)]
+    public void IsNegative_ReturnsExpected(decimal value, bool expected)
+    {
+        Assert.Equal(expected, value.IsNegative());
+    }
 }

@@ -13,8 +13,8 @@ public class StringExtensionHashTests
     public void ToSHA256Hash_ValidString_ReturnsExpected()
     {
         string input = "Hello World";
-        var expectedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(input));
-        var expected = Convert.ToBase64String(expectedBytes);
+        var hash = SHA256.HashData(Encoding.UTF8.GetBytes(input));
+        var expected = ToHexLower(hash);
 
         Assert.Equal(expected, input.ToSHA256Hash());
     }
@@ -22,10 +22,17 @@ public class StringExtensionHashTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    [InlineData("   ")]
-    public void ToSHA256Hash_NullOrWhitespace_ReturnsEmpty(string? input)
+    public void ToSHA256Hash_NullOrEmpty_ReturnsEmpty(string? input)
     {
         Assert.Equal(string.Empty, input.ToSHA256Hash());
+    }
+
+    [Fact]
+    public void ToSHA256Hash_WhitespaceString_ReturnsHash()
+    {
+        string input = "   ";
+        var result = input.ToSHA256Hash();
+        Assert.NotEqual(string.Empty, result);
     }
 
     #endregion
